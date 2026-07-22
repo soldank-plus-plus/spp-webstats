@@ -1,15 +1,14 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigType, configValidationSchema } from '@api/config/env';
 import { Environment } from '@api/types';
 import { LoggerMiddleware } from '@api/logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '@api/entities/user.entity';
-import { MapEntity } from '@api/entities/map.entity';
-import { EventEntity } from '@api/entities/event.entity';
-import { StatEntity } from '@api/entities/stat.entity';
+import { UserEntity } from '@api/users/user.entity';
+import { MapEntity } from '@api/maps/map.entity';
+import { EventEntity } from '@api/events/event.entity';
+import { StatEntity } from '@api/stats/stat.entity';
+import { EventsModule } from '@api/events/events.module';
 
 @Module({
   imports: [
@@ -35,9 +34,8 @@ import { StatEntity } from '@api/entities/stat.entity';
         logging: true,
       }),
     }),
+    EventsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

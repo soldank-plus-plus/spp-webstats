@@ -1,10 +1,11 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { ConfigType } from '@api/config/env';
 import { ErrorMessageInterceptor } from '@api/interceptors';
+import { SerializeInterceptor } from '@api/serialize';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -17,7 +18,10 @@ async function bootstrap() {
   const isDevelopmentEnvironment =
     configService.get('NODE_ENV') === 'development';
 
-  app.useGlobalInterceptors(new ErrorMessageInterceptor());
+  app.useGlobalInterceptors(
+    new ErrorMessageInterceptor(),
+    new SerializeInterceptor(app.get(Reflector)),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: false,

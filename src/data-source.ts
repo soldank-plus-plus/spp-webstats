@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { UserEntity } from './entities/user.entity';
-import { MapEntity } from './entities/map.entity';
-import { EventEntity } from './entities/event.entity';
-import { StatEntity } from './entities/stat.entity';
+import { UserEntity } from '@api/users/user.entity';
+import { MapEntity } from '@api/maps/map.entity';
+import { EventEntity } from '@api/events/event.entity';
+import { StatEntity } from '@api/stats/stat.entity';
 
 dotenv.config();
 

@@ -8,9 +8,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { EventEntity } from './event.entity';
-import { StatEntity } from './stat.entity';
-import { UserEntity } from './user.entity';
+import { EventEntity } from '@api/events/event.entity';
+import { StatEntity } from '@api/stats/stat.entity';
+import { UserEntity } from '@api/users/user.entity';
 
 @Entity('maps')
 @Index('idx_maps_name', ['mapname'])

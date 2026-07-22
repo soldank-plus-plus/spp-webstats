@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { MapEntity } from './map.entity';
-import { UserEntity } from './user.entity';
+import { MapEntity } from '@api/maps/map.entity';
+import { UserEntity } from '@api/users/user.entity';
 
 @Entity('events')
 @Index('idx_events_map_id', ['mapId'])
