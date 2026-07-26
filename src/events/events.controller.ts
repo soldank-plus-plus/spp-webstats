@@ -1,8 +1,16 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Serialize } from '@api/serialize';
+import {
+  PaginatedSwaggerDocs,
+  Paginate,
+  PaginateQuery,
+  Paginated,
+} from 'nestjs-paginate';
+import { SerializePaginate } from '@api/serialize';
 import { EventsService } from './events.service';
+import { EventEntity } from './event.entity';
 import { FindAllEventsDto } from './dto/response.dto';
+import { EVENTS_PAGINATION_CONFIG } from './events.pagination';
 
 @ApiTags('events')
 @Controller('events')
@@ -12,8 +20,9 @@ export class EventsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all events' })
-  @Serialize(FindAllEventsDto)
-  findAll(): Promise<FindAllEventsDto[]> {
-    return this.eventsService.findAll();
+  @PaginatedSwaggerDocs(FindAllEventsDto, EVENTS_PAGINATION_CONFIG)
+  @SerializePaginate(FindAllEventsDto)
+  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<EventEntity>> {
+    return this.eventsService.findAll(query);
   }
 }
