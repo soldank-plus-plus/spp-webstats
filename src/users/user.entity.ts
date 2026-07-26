@@ -7,9 +7,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { EventEntity } from './event.entity';
-import { MapEntity } from './map.entity';
-import { StatEntity } from './stat.entity';
+import { EventEntity } from '@api/events/event.entity';
+import { MapEntity } from '@api/maps/map.entity';
+import { StatEntity } from '@api/stats/stat.entity';
 
 @Entity('users')
 @Index('idx_users_username', ['username'])

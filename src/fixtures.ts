@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import AppDataSource from './data-source';
-import { UserEntity } from './entities/user.entity';
-import { MapEntity } from './entities/map.entity';
-import { EventEntity } from './entities/event.entity';
-import { StatEntity } from './entities/stat.entity';
+import { UserEntity } from '@api/users/user.entity';
+import { MapEntity } from '@api/maps/map.entity';
+import { EventEntity } from '@api/events/event.entity';
+import { StatEntity } from '@api/stats/stat.entity';
 
 // refId is the original id from the legacy sqlite dump this data was
 // sampled from. It's only used to wire up relations below before insertion
