@@ -1,14 +1,13 @@
 import { PaginateConfig, PaginationType } from 'nestjs-paginate';
 import { DEFAULT_LIMIT, DEFAULT_MAX_LIMIT } from '@api/pagination.constants';
-import { EventEntity } from './event.entity';
+import { MapEntity } from './map.entity';
 
-export const EVENTS_PAGINATION_CONFIG: PaginateConfig<EventEntity> = {
-  sortableColumns: ['id', 'type', 'medal', 'eventDate'],
+export const MAPS_PAGINATION_CONFIG: PaginateConfig<MapEntity> = {
+  sortableColumns: ['id', 'mapname', 'date'],
   defaultSortBy: [['id', 'ASC']],
   filterableColumns: {
-    type: true,
-    medal: true,
-    eventDate: true,
+    mapname: true,
+    date: true,
   },
   maxLimit: DEFAULT_MAX_LIMIT,
   defaultLimit: DEFAULT_LIMIT,
