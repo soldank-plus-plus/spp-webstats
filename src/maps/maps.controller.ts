@@ -1,4 +1,12 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
@@ -6,7 +14,7 @@ import {
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
-import { SerializePaginate } from '@api/serialize';
+import { Serialize, SerializePaginate } from '@api/serialize';
 import { MapsService } from './maps.service';
 import { MapEntity } from './map.entity';
 import { FindAllMapsDto } from './dto/response.dto';
@@ -24,5 +32,19 @@ export class MapsController {
   @SerializePaginate(FindAllMapsDto)
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<MapEntity>> {
     return this.mapsService.findAll(query);
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get map by id' })
+  @Serialize(FindAllMapsDto)
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<MapEntity> {
+    const map = await this.mapsService.findOne(id);
+
+    if (!map) {
+      throw new NotFoundException(`Map not found`);
+    }
+
+    return map;
   }
 }
