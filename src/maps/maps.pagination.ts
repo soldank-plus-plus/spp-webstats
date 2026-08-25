@@ -3,7 +3,8 @@ import { DEFAULT_LIMIT, DEFAULT_MAX_LIMIT } from '@api/pagination.constants';
 import { MapEntity } from './map.entity';
 
 export const MAPS_PAGINATION_CONFIG: PaginateConfig<MapEntity> = {
-  sortableColumns: ['id', 'mapname', 'date'],
+  sortableColumns: ['id', 'mapname', 'date', 'hardest'],
+  searchableColumns: ['mapname'],
   defaultSortBy: [['id', 'ASC']],
   filterableColumns: {
     mapname: true,
