@@ -15,4 +15,8 @@ export class MapsService {
   findAll(query: PaginateQuery): Promise<Paginated<MapEntity>> {
     return paginate(query, this.mapsRepository, MAPS_PAGINATION_CONFIG);
   }
+
+  findOne(id: number): Promise<MapEntity | null> {
+    return this.mapsRepository.findOneBy({ id });
+  }
 }
