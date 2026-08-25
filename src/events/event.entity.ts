@@ -10,6 +10,11 @@ import {
 import { MapEntity } from '@api/maps/map.entity';
 import { UserEntity } from '@api/users/user.entity';
 
+const bigintTransformer = {
+  to: (value: number | null) => value,
+  from: (value: string | null) => (value === null ? null : Number(value)),
+};
+
 @Entity('events')
 @Index('idx_events_map_id', ['mapId'])
 @Index('idx_events_user_id', ['userId'])
@@ -31,7 +36,11 @@ export class EventEntity {
   @Column('integer', { nullable: true })
   medal: number | null;
 
-  @Column('integer', { name: 'event_date', nullable: true })
+  @Column('bigint', {
+    name: 'event_date',
+    nullable: true,
+    transformer: bigintTransformer,
+  })
   eventDate: number | null;
 
   @ManyToOne(() => MapEntity, (map) => map.events, { nullable: true })

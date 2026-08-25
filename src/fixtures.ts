@@ -264,16 +264,17 @@ const events: (Partial<EventEntity> & {
   mapRefId: number;
   userRefId: number;
 })[] = [
-  { type: 1, mapRefId: 1, userRefId: 435, medal: 1, eventDate: 1572810519 },
-  { type: 1, mapRefId: 1, userRefId: 422, medal: 1, eventDate: 1574346448 },
-  { type: 3, mapRefId: 1, userRefId: 435, medal: 1, eventDate: 1574346448 },
-  { type: 1, mapRefId: 1, userRefId: 435, medal: 2, eventDate: 1574346448 },
-  { type: 1, mapRefId: 1, userRefId: 23, medal: 1, eventDate: 1574348729 },
-  { type: 3, mapRefId: 1, userRefId: 422, medal: 1, eventDate: 1574348729 },
-  { type: 1, mapRefId: 1, userRefId: 422, medal: 2, eventDate: 1574348729 },
-  { type: 3, mapRefId: 1, userRefId: 435, medal: 2, eventDate: 1574348729 },
-  { type: 1, mapRefId: 1, userRefId: 435, medal: 3, eventDate: 1574348729 },
-  { type: 1, mapRefId: 1, userRefId: 10, medal: 1, eventDate: 1574352577 },
+  // eventDate is a unix timestamp in milliseconds (matches climb.sql).
+  { type: 1, mapRefId: 1, userRefId: 435, medal: 1, eventDate: 1572810519000 },
+  { type: 1, mapRefId: 1, userRefId: 422, medal: 1, eventDate: 1574346448000 },
+  { type: 3, mapRefId: 1, userRefId: 435, medal: 1, eventDate: 1574346448000 },
+  { type: 1, mapRefId: 1, userRefId: 435, medal: 2, eventDate: 1574346448000 },
+  { type: 1, mapRefId: 1, userRefId: 23, medal: 1, eventDate: 1574348729000 },
+  { type: 3, mapRefId: 1, userRefId: 422, medal: 1, eventDate: 1574348729000 },
+  { type: 1, mapRefId: 1, userRefId: 422, medal: 2, eventDate: 1574348729000 },
+  { type: 3, mapRefId: 1, userRefId: 435, medal: 2, eventDate: 1574348729000 },
+  { type: 1, mapRefId: 1, userRefId: 435, medal: 3, eventDate: 1574348729000 },
+  { type: 1, mapRefId: 1, userRefId: 10, medal: 1, eventDate: 1574352577000 },
 ];
 
 const stats: (Partial<StatEntity> & { mapRefId: number; userRefId: number })[] =
