@@ -25,40 +25,28 @@ export class MapEntity {
   date: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  loop: number | null;
+  anticoop: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  sprint: number | null;
+  jets: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  rloop: number | null;
+  m79: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  rsprint: number | null;
+  nade: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  hns: number | null;
+  switch: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  ctf: number | null;
+  coop: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  htf: number | null;
+  m79c: number | null;
 
   @Column('integer', { default: 0, nullable: true })
-  inf: number | null;
-
-  @Column('integer', { default: 0, nullable: true })
-  reversed: number | null;
-
-  @Column('integer', { default: 0, nullable: true })
-  race: number | null;
-
-  @Column('integer', { default: 0, nullable: true })
-  runmode: number | null;
-
-  @Column('integer', { default: 0, nullable: true })
-  duplicate: number | null;
+  hardest: number | null;
 
   @OneToMany(() => EventEntity, (event) => event.map)
   events: EventEntity[];

@@ -10,6 +10,7 @@ import {
 import { EventEntity } from '@api/events/event.entity';
 import { MapEntity } from '@api/maps/map.entity';
 import { StatEntity } from '@api/stats/stat.entity';
+import { bigintTransformer } from '@api/typeorm.transformers';
 
 @Entity('users')
 @Index('idx_users_username', ['username'])
@@ -33,22 +34,33 @@ export class UserEntity {
   @Column('integer', { name: 'no_medal', default: 0, nullable: true })
   noMedal: number | null;
 
-  @Column('integer', { name: 'total_points', default: 0, nullable: true })
-  totalPoints: number | null;
-
   @Column('integer', { name: 'unique_caps', default: 0, nullable: true })
   uniqueCaps: number | null;
+
+  @Column('integer', { name: 'total_caps', default: 0, nullable: true })
+  totalCaps: number | null;
 
   @Column('integer', { name: 'maps_created', default: 0, nullable: true })
   mapsCreated: number | null;
 
   @Column('integer', { default: 0, nullable: true })
+  hardest: number | null;
+
+  @Column('integer', { default: 0, nullable: true })
   playtime: number | null;
 
-  @Column('integer', { name: 'created_at', nullable: true })
+  @Column('bigint', {
+    name: 'created_at',
+    nullable: true,
+    transformer: bigintTransformer,
+  })
   createdAt: number | null;
 
-  @Column('integer', { name: 'last_active_at', nullable: true })
+  @Column('bigint', {
+    name: 'last_active_at',
+    nullable: true,
+    transformer: bigintTransformer,
+  })
   lastActiveAt: number | null;
 
   @OneToMany(() => EventEntity, (event) => event.user)
