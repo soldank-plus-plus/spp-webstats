@@ -19,6 +19,10 @@ import { EventsService } from '@api/events/events.service';
 import { EventEntity } from '@api/events/event.entity';
 import { FindAllEventsDto } from '@api/events/dto/response.dto';
 import { EVENTS_PAGINATION_CONFIG } from '@api/events/events.pagination';
+import { StatsService } from '@api/stats/stats.service';
+import { StatEntity } from '@api/stats/stat.entity';
+import { FindAllStatsDto } from '@api/stats/dto/response.dto';
+import { STATS_PAGINATION_CONFIG } from '@api/stats/stats.pagination';
 import { MapsService } from './maps.service';
 import { MapEntity } from './map.entity';
 import { FindAllMapsDto } from './dto/response.dto';
@@ -30,6 +34,7 @@ export class MapsController {
   constructor(
     private readonly mapsService: MapsService,
     private readonly eventsService: EventsService,
+    private readonly statsService: StatsService,
   ) {}
 
   @Get()
@@ -75,5 +80,17 @@ export class MapsController {
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<EventEntity>> {
     return this.eventsService.findAllForMap(mapId, query);
+  }
+
+  @Get(':mapId/stats')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get stats for a map' })
+  @PaginatedSwaggerDocs(FindAllStatsDto, STATS_PAGINATION_CONFIG)
+  @SerializePaginate(FindAllStatsDto)
+  findStats(
+    @Param('mapId', ParseIntPipe) mapId: number,
+    @Paginate() query: PaginateQuery,
+  ): Promise<Paginated<StatEntity>> {
+    return this.statsService.findAllForMap(mapId, query);
   }
 }

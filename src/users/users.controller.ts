@@ -18,6 +18,10 @@ import { EventsService } from '@api/events/events.service';
 import { EventEntity } from '@api/events/event.entity';
 import { FindAllEventsDto } from '@api/events/dto/response.dto';
 import { EVENTS_PAGINATION_CONFIG } from '@api/events/events.pagination';
+import { StatsService } from '@api/stats/stats.service';
+import { StatEntity } from '@api/stats/stat.entity';
+import { FindAllStatsDto } from '@api/stats/dto/response.dto';
+import { STATS_PAGINATION_CONFIG } from '@api/stats/stats.pagination';
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
 import { FindAllUsersDto } from './dto/response.dto';
@@ -29,6 +33,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly eventsService: EventsService,
+    private readonly statsService: StatsService,
   ) {}
 
   @Get()
@@ -50,5 +55,17 @@ export class UsersController {
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<EventEntity>> {
     return this.eventsService.findAllForUser(userId, query);
+  }
+
+  @Get(':userId/stats')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get stats for a user' })
+  @PaginatedSwaggerDocs(FindAllStatsDto, STATS_PAGINATION_CONFIG)
+  @SerializePaginate(FindAllStatsDto)
+  findStats(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Paginate() query: PaginateQuery,
+  ): Promise<Paginated<StatEntity>> {
+    return this.statsService.findAllForUser(userId, query);
   }
 }
