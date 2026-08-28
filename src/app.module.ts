@@ -10,6 +10,7 @@ import { EventEntity } from '@api/events/event.entity';
 import { StatEntity } from '@api/stats/stat.entity';
 import { EventsModule } from '@api/events/events.module';
 import { MapsModule } from '@api/maps/maps.module';
+import { UsersModule } from '@api/users/users.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { MapsModule } from '@api/maps/maps.module';
     }),
     EventsModule,
     MapsModule,
+    UsersModule,
   ],
 })
 export class AppModule implements NestModule {
