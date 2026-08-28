@@ -9,6 +9,7 @@ import {
 
 import { MapEntity } from '@api/maps/map.entity';
 import { UserEntity } from '@api/users/user.entity';
+import { bigintTransformer } from '@api/typeorm.transformers';
 
 @Entity('stats')
 @Index('idx_stats_user_id', ['userId'])
@@ -28,7 +29,11 @@ export class StatEntity {
   @Column('integer', { name: 'record_time', nullable: true })
   recordTime: number | null;
 
-  @Column('integer', { name: 'record_date', nullable: true })
+  @Column('bigint', {
+    name: 'record_date',
+    nullable: true,
+    transformer: bigintTransformer,
+  })
   recordDate: number | null;
 
   @Column('integer', { nullable: true })
@@ -36,6 +41,9 @@ export class StatEntity {
 
   @Column('integer', { default: 0, nullable: true })
   team: number | null;
+
+  @Column('integer', { default: 1, nullable: true })
+  status: number | null;
 
   @ManyToOne(() => MapEntity, (map) => map.stats, { nullable: true })
   @JoinColumn({ name: 'map_id' })
