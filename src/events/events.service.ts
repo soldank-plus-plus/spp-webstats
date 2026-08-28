@@ -15,4 +15,26 @@ export class EventsService {
   findAll(query: PaginateQuery): Promise<Paginated<EventEntity>> {
     return paginate(query, this.eventsRepository, EVENTS_PAGINATION_CONFIG);
   }
+
+  findAllForMap(
+    mapId: number,
+    query: PaginateQuery,
+  ): Promise<Paginated<EventEntity>> {
+    const queryBuilder = this.eventsRepository
+      .createQueryBuilder('event')
+      .where('event.mapId = :mapId', { mapId });
+
+    return paginate(query, queryBuilder, EVENTS_PAGINATION_CONFIG);
+  }
+
+  findAllForUser(
+    userId: number,
+    query: PaginateQuery,
+  ): Promise<Paginated<EventEntity>> {
+    const queryBuilder = this.eventsRepository
+      .createQueryBuilder('event')
+      .where('event.userId = :userId', { userId });
+
+    return paginate(query, queryBuilder, EVENTS_PAGINATION_CONFIG);
+  }
 }
