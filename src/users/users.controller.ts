@@ -18,11 +18,27 @@ import { EventsService } from '@api/events/events.service';
 import { EventEntity } from '@api/events/event.entity';
 import { FindAllEventsDto } from '@api/events/dto/response.dto';
 import { EVENTS_PAGINATION_CONFIG } from '@api/events/events.pagination';
+import { UsersService } from './users.service';
+import { UserEntity } from './user.entity';
+import { FindAllUsersDto } from './dto/response.dto';
+import { USERS_PAGINATION_CONFIG } from './users.pagination';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly eventsService: EventsService,
+  ) {}
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get all users' })
+  @PaginatedSwaggerDocs(FindAllUsersDto, USERS_PAGINATION_CONFIG)
+  @SerializePaginate(FindAllUsersDto)
+  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<UserEntity>> {
+    return this.usersService.findAll(query);
+  }
 
   @Get(':userId/events')
   @HttpCode(HttpStatus.OK)
