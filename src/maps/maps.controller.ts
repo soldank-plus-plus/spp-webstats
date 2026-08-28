@@ -55,6 +55,16 @@ export class MapsController {
     return map;
   }
 
+  @Get('by-user/:userId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get maps created by a user' })
+  @Serialize(FindAllMapsDto)
+  findByUser(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<MapEntity[]> {
+    return this.mapsService.findAllByUser(userId);
+  }
+
   @Get(':mapId/events')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get events for a map' })

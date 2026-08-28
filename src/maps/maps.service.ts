@@ -45,6 +45,17 @@ export class MapsService {
     return enriched;
   }
 
+  async findAllByUser(userId: number): Promise<MapEntity[]> {
+    const maps = await this.mapsRepository
+      .createQueryBuilder('map')
+      .innerJoin('map.creators', 'creator', 'creator.id = :userId', {
+        userId,
+      })
+      .getMany();
+
+    return this.enrich(maps);
+  }
+
   // Fetches creators and records count for a page of maps separately from
   // the main (possibly LIMIT/OFFSET-paginated) query, rather than joining
   // them in: joining a to-many relation together with LIMIT/OFFSET truncates
