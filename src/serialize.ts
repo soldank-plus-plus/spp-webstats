@@ -50,7 +50,11 @@ export class SerializeInterceptor implements NestInterceptor {
         }
 
         return dtoClass
-          ? plainToInstance(dtoClass, data, { excludeExtraneousValues: true })
+          ? {
+              data: plainToInstance(dtoClass, data, {
+                excludeExtraneousValues: true,
+              }),
+            }
           : data;
       }),
     );
