@@ -5,6 +5,7 @@ import { EventEntity } from './event.entity';
 export const EVENTS_PAGINATION_CONFIG: PaginateConfig<EventEntity> = {
   relations: ['map', 'user'],
   sortableColumns: ['id', 'type', 'medal', 'eventDate'],
+  searchableColumns: ['user.username', 'map.mapname'],
   defaultSortBy: [['id', 'ASC']],
   filterableColumns: {
     type: true,
