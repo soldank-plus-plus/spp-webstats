@@ -15,4 +15,26 @@ export class StatsService {
   findAll(query: PaginateQuery): Promise<Paginated<StatEntity>> {
     return paginate(query, this.statsRepository, STATS_PAGINATION_CONFIG);
   }
+
+  findAllForMap(
+    mapId: number,
+    query: PaginateQuery,
+  ): Promise<Paginated<StatEntity>> {
+    const queryBuilder = this.statsRepository
+      .createQueryBuilder('stat')
+      .where('stat.mapId = :mapId', { mapId });
+
+    return paginate(query, queryBuilder, STATS_PAGINATION_CONFIG);
+  }
+
+  findAllForUser(
+    userId: number,
+    query: PaginateQuery,
+  ): Promise<Paginated<StatEntity>> {
+    const queryBuilder = this.statsRepository
+      .createQueryBuilder('stat')
+      .where('stat.userId = :userId', { userId });
+
+    return paginate(query, queryBuilder, STATS_PAGINATION_CONFIG);
+  }
 }
