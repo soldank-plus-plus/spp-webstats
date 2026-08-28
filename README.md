@@ -1,6 +1,6 @@
 # Soldank++ Webstats
 
-Backend for [Soldank++](https://github.com/soldank-plus-plus/soldank-plus-plus) website built with NestJS and TypeScript.
+Backend for [Soldank++](https://github.com/soldank-plus-plus/soldank-plus-plus) website built with NestJS and TypeScript with Postgres database via TypeORM.
 The frontend architecture can be found [here](https://github.com/soldank-plus-plus/spp-website).
 
 ## Environment Variables
@@ -8,7 +8,7 @@ The frontend architecture can be found [here](https://github.com/soldank-plus-pl
 Configuration is read from a `.env` file at the project root. `.env.example` is provided as a template with sensible local-dev defaults — copy it to get started:
 
 ```bash
-$ cp .env.example .env
+cp .env.example .env
 ```
 
 Variables:
@@ -35,24 +35,33 @@ The project uses the following packages:
 ## Setup
 
 ### Building
+Make sure you have Node.js v16 (or higher) and clone this repository:
+
 ```bash
-$ npm install
+git clone https://github.com/soldank-plus-plus/spp-webstats
+cd spp-website
+```
+
+Then install the dependencies:
+
+```bash
+npm install
 ```
 
 ### Database
 This project uses PostgreSQL via TypeORM. Set up the required environment variables as described above, then start a local Postgres instance with Docker Compose:
 
 ```bash
-$ docker compose up -d
+docker compose up -d
 ```
 
 To stop it:
 
 ```bash
-$ docker compose down
+docker compose down
 
 # also remove the postgres_data volume
-$ docker compose down -v
+docker compose down -v
 ```
 
 ### Migrations
@@ -61,25 +70,25 @@ Migrations live in `src/migrations/` and are driven by `src/data-source.ts`. The
 Generate a migration from the diff between the entities and the current database schema (the DB from `docker compose up -d` must be running):
 
 ```bash
-$ npm run migration:generate --name=<MigrationName>
+npm run migration:generate --name=<MigrationName>
 ```
 
 Apply pending migrations:
 
 ```bash
-$ npm run migration:run
+npm run migration:run
 ```
 
 Revert the last applied migration:
 
 ```bash
-$ npm run migration:revert
+npm run migration:revert
 ```
 
 Drop everything in the database and reapply all migrations from a clean state:
 
 ```bash
-$ npm run migration:reload
+npm run migration:reload
 ```
 
 ### Fixtures
@@ -88,7 +97,7 @@ Populate the database with a small set of real sample `users`, `maps`,
 already be applied):
 
 ```bash
-$ npm run fixtures
+npm run fixtures
 ```
 
 This is insert-only, not idempotent: running it again against a database
@@ -98,13 +107,13 @@ overwriting anything.
 ### Running
 ```bash
 # development
-$ npm run start
+npm run start
 
 # watch mode
-$ npm run start:dev
+npm run start:dev
 
 # production mode
-$ npm run start:prod
+npm run start:prod
 ```
 
 ## Development
@@ -112,13 +121,13 @@ $ npm run start:prod
 ### Testing
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
 # test coverage
-$ npm run test:cov
+npm run test:cov
 ```
 
 ### Type checking and linting
