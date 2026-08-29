@@ -114,7 +114,7 @@ export class UsersController {
     name: 'type',
     enum: ACTIVITY_TYPES,
   })
-  @Serialize(ActivityDayDto)
+  @Serialize(ActivityDayDto, { isArray: true })
   findActivity(
     @Param('id', ParseIntPipe) id: number,
     @Query('type') type: string,

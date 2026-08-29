@@ -63,7 +63,7 @@ export class MapsController {
   @Get('by-user/:userId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get maps created by a user' })
-  @Serialize(FindAllMapsDto)
+  @Serialize(FindAllMapsDto, { isArray: true })
   findByUser(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<MapEntity[]> {

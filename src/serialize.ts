@@ -11,15 +11,31 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 
 export const SERIALIZE_DTO_KEY = 'serialize_dto';
 export const SERIALIZE_PAGINATE_DTO_KEY = 'serialize_paginate_dto';
 
-export const Serialize = (dto: ClassConstructor<any>) =>
+// The response is always wrapped in { data: ... } (see SerializeInterceptor
+// below); this documents that envelope in the OpenAPI schema, instead of
+// just `type: dto`, so generated API clients don't need to work around a
+// missing `data` property (or a missing array wrapper for isArray: true).
+export const Serialize = (
+  dto: ClassConstructor<any>,
+  options: { isArray?: boolean } = {},
+) =>
   applyDecorators(
     SetMetadata(SERIALIZE_DTO_KEY, dto),
-    ApiOkResponse({ type: dto }),
+    ApiExtraModels(dto),
+    ApiOkResponse({
+      schema: {
+        properties: {
+          data: options.isArray
+            ? { type: 'array', items: { $ref: getSchemaPath(dto) } }
+            : { $ref: getSchemaPath(dto) },
+        },
+      },
+    }),
   );
 
 export const SerializePaginate = (dto: ClassConstructor<any>) =>
