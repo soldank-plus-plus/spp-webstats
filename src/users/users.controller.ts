@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   ParseIntPipe,
 } from '@nestjs/common';
@@ -13,7 +14,7 @@ import {
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
-import { SerializePaginate } from '@api/serialize';
+import { Serialize, SerializePaginate } from '@api/serialize';
 import { EventsService } from '@api/events/events.service';
 import { EventEntity } from '@api/events/event.entity';
 import { FindAllEventsDto } from '@api/events/dto/response.dto';
@@ -43,6 +44,36 @@ export class UsersController {
   @SerializePaginate(FindAllUsersDto)
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<UserEntity>> {
     return this.usersService.findAll(query);
+  }
+
+  @Get('by-username/:username')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user by username' })
+  @Serialize(FindAllUsersDto)
+  async findOneByUsername(
+    @Param('username') username: string,
+  ): Promise<UserEntity> {
+    const user = await this.usersService.findOneByUsername(username);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user by id' })
+  @Serialize(FindAllUsersDto)
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
+    const user = await this.usersService.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 
   @Get(':userId/events')
