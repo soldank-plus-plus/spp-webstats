@@ -15,4 +15,12 @@ export class UsersService {
   findAll(query: PaginateQuery): Promise<Paginated<UserEntity>> {
     return paginate(query, this.usersRepository, USERS_PAGINATION_CONFIG);
   }
+
+  findOne(id: number): Promise<UserEntity | null> {
+    return this.usersRepository.findOneBy({ id });
+  }
+
+  findOneByUsername(username: string): Promise<UserEntity | null> {
+    return this.usersRepository.findOneBy({ username });
+  }
 }
