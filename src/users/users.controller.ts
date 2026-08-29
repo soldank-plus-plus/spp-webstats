@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   HttpCode,
@@ -6,8 +7,9 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
@@ -19,10 +21,15 @@ import { EventsService } from '@api/events/events.service';
 import { EventEntity } from '@api/events/event.entity';
 import { FindAllEventsDto } from '@api/events/dto/response.dto';
 import { EVENTS_PAGINATION_CONFIG } from '@api/events/events.pagination';
-import { StatsService } from '@api/stats/stats.service';
+import {
+  ACTIVITY_TYPES,
+  ActivityType,
+  StatsService,
+} from '@api/stats/stats.service';
 import { StatEntity } from '@api/stats/stat.entity';
 import { FindAllStatsDto } from '@api/stats/dto/response.dto';
 import { STATS_PAGINATION_CONFIG } from '@api/stats/stats.pagination';
+import { ActivityDayDto } from '@api/stats/dto/activity.dto';
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
 import { FindAllUsersDto } from './dto/response.dto';
@@ -98,5 +105,26 @@ export class UsersController {
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<StatEntity>> {
     return this.statsService.findAllForUser(userId, query);
+  }
+
+  @Get(':id/activity')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get user activity by day' })
+  @ApiQuery({
+    name: 'type',
+    enum: ACTIVITY_TYPES,
+  })
+  @Serialize(ActivityDayDto)
+  findActivity(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('type') type: string,
+  ): Promise<{ day: string; count: number }[]> {
+    if (!ACTIVITY_TYPES.includes(type as ActivityType)) {
+      throw new BadRequestException(
+        `type must be one of ${ACTIVITY_TYPES.join(', ')}`,
+      );
+    }
+
+    return this.statsService.findActivityForUser(id, type as ActivityType);
   }
 }
