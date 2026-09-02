@@ -5,6 +5,8 @@ import { Environment } from '@api/types';
 import { LoggerMiddleware } from '@api/logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '@api/users/user.entity';
+import { ClanEntity } from '@api/clans/clan.entity';
+import { CountryEntity } from '@api/countries/country.entity';
 import { MapEntity } from '@api/maps/map.entity';
 import { EventEntity } from '@api/events/event.entity';
 import { StatEntity } from '@api/stats/stat.entity';
@@ -31,7 +33,14 @@ import { StatsModule } from '@api/stats/stats.module';
         username: config.get('DB_USER', { infer: true }),
         password: config.get('DB_PASSWORD', { infer: true }),
         database: config.get('DB_DATABASE', { infer: true }),
-        entities: [UserEntity, MapEntity, EventEntity, StatEntity],
+        entities: [
+          UserEntity,
+          ClanEntity,
+          CountryEntity,
+          MapEntity,
+          EventEntity,
+          StatEntity,
+        ],
         synchronize:
           config.get('NODE_ENV', { infer: true }) === Environment.DEVELOPMENT,
         logging: true,

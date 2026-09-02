@@ -2,11 +2,15 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { ClanEntity } from '@api/clans/clan.entity';
+import { CountryEntity } from '@api/countries/country.entity';
 import { EventEntity } from '@api/events/event.entity';
 import { MapEntity } from '@api/maps/map.entity';
 import { StatEntity } from '@api/stats/stat.entity';
@@ -21,6 +25,12 @@ export class UserEntity {
 
   @Column('varchar', { length: 256, unique: true })
   username: string;
+
+  @Column('integer', { name: 'clan_id', nullable: true })
+  clanId: number | null;
+
+  @Column('integer', { name: 'country_id', nullable: true })
+  countryId: number | null;
 
   @Column('integer', { default: 0, nullable: true })
   gold: number | null;
@@ -71,4 +81,15 @@ export class UserEntity {
 
   @ManyToMany(() => MapEntity, (map) => map.creators)
   createdMaps: MapEntity[];
+
+  @ManyToMany(() => ClanEntity, (clan) => clan.creators)
+  createdClans: ClanEntity[];
+
+  @ManyToOne(() => ClanEntity, { nullable: true })
+  @JoinColumn({ name: 'clan_id' })
+  clan: ClanEntity | null;
+
+  @ManyToOne(() => CountryEntity, { nullable: true })
+  @JoinColumn({ name: 'country_id' })
+  country: CountryEntity | null;
 }
