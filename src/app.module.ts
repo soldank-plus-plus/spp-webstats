@@ -15,6 +15,7 @@ import { MapsModule } from '@api/maps/maps.module';
 import { UsersModule } from '@api/users/users.module';
 import { StatsModule } from '@api/stats/stats.module';
 import { ClansModule } from '@api/clans/clans.module';
+import { CountriesModule } from '@api/countries/countries.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { ClansModule } from '@api/clans/clans.module';
     UsersModule,
     StatsModule,
     ClansModule,
+    CountriesModule,
   ],
 })
 export class AppModule implements NestModule {
