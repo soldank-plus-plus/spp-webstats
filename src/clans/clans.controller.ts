@@ -6,7 +6,7 @@ import {
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
-import { SerializePaginate } from '@api/serialize';
+import { SerializePaginate } from '@api/shared/serialization/serialize';
 import { ClansService } from './clans.service';
 import { ClanEntity } from './clan.entity';
 import { FindAllClansDto } from './dto/response.dto';

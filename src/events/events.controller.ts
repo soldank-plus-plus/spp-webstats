@@ -6,7 +6,7 @@ import {
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
-import { SerializePaginate } from '@api/serialize';
+import { SerializePaginate } from '@api/shared/serialization/serialize';
 import { EventsService } from './events.service';
 import { EventEntity } from './event.entity';
 import { FindAllEventsDto } from './dto/response.dto';

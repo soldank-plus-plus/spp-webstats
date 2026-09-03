@@ -1,5 +1,8 @@
 import { PaginateConfig, PaginationType } from 'nestjs-paginate';
-import { DEFAULT_LIMIT, DEFAULT_MAX_LIMIT } from '@api/pagination.constants';
+import {
+  DEFAULT_LIMIT,
+  DEFAULT_MAX_LIMIT,
+} from '@api/shared/pagination/pagination.constants';
 import { StatEntity } from './stat.entity';
 
 export const STATS_PAGINATION_CONFIG: PaginateConfig<StatEntity> = {

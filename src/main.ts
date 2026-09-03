@@ -4,8 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { ConfigType } from '@api/config/env';
-import { ErrorMessageInterceptor } from '@api/interceptors';
-import { SerializeInterceptor } from '@api/serialize';
+import { ErrorMessageInterceptor } from '@api/shared/interceptors/interceptors';
+import { SerializeInterceptor } from '@api/shared/serialization/serialize';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {

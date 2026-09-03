@@ -6,7 +6,7 @@ import {
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
-import { SerializePaginate } from '@api/serialize';
+import { SerializePaginate } from '@api/shared/serialization/serialize';
 import { CountriesService } from './countries.service';
 import { CountryEntity } from './country.entity';
 import { FindAllCountriesDto } from './dto/response.dto';
