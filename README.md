@@ -93,7 +93,7 @@ npm run migration:reload
 
 ### Fixtures
 Populate the database with a small set of real sample `users`, `maps`,
-`map_creators`, `events`, and `stats` for local development (migrations must
+`map_creators`, `positions`, and `stats` for local development (migrations must
 already be applied):
 
 ```bash

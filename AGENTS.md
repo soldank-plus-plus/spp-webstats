@@ -4,7 +4,7 @@ This file provides guidance to AI tools like Claude Code or Codex when working w
 
 ## Project
 
-NestJS REST API for Soldat++ webstats: game statistics for players, maps, capture/medal events and time-attack records. PostgreSQL via TypeORM. Currently read-only (`GET /events`, `GET /maps`, `GET /maps/:id`), consumed by a separate frontend (spp-website).
+NestJS REST API for Soldat++ webstats: game statistics for players, maps, capture/medal positions and time-attack records. PostgreSQL via TypeORM. Currently read-only (`GET /positions`, `GET /maps`, `GET /maps/:id`), consumed by a separate frontend (spp-website).
 
 ## Build
 
@@ -28,7 +28,7 @@ Jest is configured (`npm run test`, `npm run test:e2e`, `npm run test:cov`), but
 
 ## Architecture
 
-Feature-module pattern, one folder per resource under `src/features/` (e.g. `src/features/events/`, `src/features/maps/`):
+Feature-module pattern, one folder per resource under `src/features/` (e.g. `src/features/positions/`, `src/features/maps/`):
 - `<name>.entity.ts`: TypeORM entity, camelCase properties mapped to snake_case columns via `name:`.
 - `<name>.controller.ts` / `<name>.service.ts` / `<name>.module.ts`: standard Nest controller/service/module.
 - `dto/response.dto.ts`: class-transformer DTO; only fields marked `@Expose()` are serialized out.
