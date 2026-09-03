@@ -35,7 +35,7 @@ import { STATS_PAGINATION_CONFIG } from '@api/features/stats/stats.pagination';
 import { ActivityDayDto } from '@api/features/stats/dto/activity.dto';
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
-import { FindAllUsersDto } from './dto/response.dto';
+import { FindAllUsersDto, FindOneUserDto } from './dto/response.dto';
 import { USERS_PAGINATION_CONFIG } from './users.pagination';
 
 @ApiTags('users')
@@ -59,7 +59,7 @@ export class UsersController {
   @Get('by-username/:username')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user by username' })
-  @Serialize(FindAllUsersDto)
+  @Serialize(FindOneUserDto)
   async findOneByUsername(
     @Param('username') username: string,
   ): Promise<UserEntity> {
@@ -75,7 +75,7 @@ export class UsersController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user by id' })
-  @Serialize(FindAllUsersDto)
+  @Serialize(FindOneUserDto)
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
     const user = await this.usersService.findOne(id);
 

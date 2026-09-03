@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class FindAllUsersDto {
@@ -85,4 +85,28 @@ export class FindAllUsersDto {
     type: Number,
   })
   lastActiveAt: number | null;
+}
+
+class UserPlacementDto {
+  @Expose()
+  @ApiProperty({ description: 'Place in the unique captures ranking' })
+  records: number;
+
+  @Expose()
+  @ApiProperty({ description: 'Place in the hardest map ranking' })
+  hardest: number;
+
+  @Expose()
+  @ApiProperty({ description: 'Place in the gold medal ranking' })
+  golds: number;
+}
+
+export class FindOneUserDto extends FindAllUsersDto {
+  @Expose()
+  @Type(() => UserPlacementDto)
+  @ApiProperty({
+    description: 'Places in the rankings this user appears in',
+    type: UserPlacementDto,
+  })
+  placement: UserPlacementDto;
 }
