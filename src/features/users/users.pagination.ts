@@ -16,6 +16,8 @@ export const USERS_PAGINATION_CONFIG: PaginateConfig<UserEntity> = {
   ],
   searchableColumns: ['username'],
   defaultSortBy: [['id', 'ASC']],
+  // medal columns are nullable, and Postgres orders NULLs first on DESC
+  nullSort: 'last',
   filterableColumns: {},
   maxLimit: DEFAULT_MAX_LIMIT,
   defaultLimit: DEFAULT_LIMIT,
