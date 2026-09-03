@@ -14,7 +14,7 @@ import { CountryEntity } from '@api/countries/country.entity';
 import { EventEntity } from '@api/events/event.entity';
 import { MapEntity } from '@api/maps/map.entity';
 import { StatEntity } from '@api/stats/stat.entity';
-import { bigintTransformer } from '@api/database/transformers/typeorm.transformers';
+import { bigintTransformer } from '@api/database/transformers/bigint.transformer';
 
 @Entity('users')
 @Index('idx_users_username', ['username'])

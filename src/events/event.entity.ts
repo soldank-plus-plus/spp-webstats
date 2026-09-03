@@ -9,7 +9,7 @@ import {
 
 import { MapEntity } from '@api/maps/map.entity';
 import { UserEntity } from '@api/users/user.entity';
-import { bigintTransformer } from '@api/database/transformers/typeorm.transformers';
+import { bigintTransformer } from '@api/database/transformers/bigint.transformer';
 
 @Entity('events')
 @Index('idx_events_map_id', ['mapId'])
