@@ -85,6 +85,12 @@ export class FindAllUsersDto {
     type: Number,
   })
   lastActiveAt: number | null;
+
+  @Expose()
+  @ApiProperty({
+    description: 'Percentage of all maps this user has captured',
+  })
+  passed: number;
 }
 
 class UserPlacementDto {
@@ -109,4 +115,8 @@ export class FindOneUserDto extends FindAllUsersDto {
     type: UserPlacementDto,
   })
   placement: UserPlacementDto;
+
+  @Expose()
+  @ApiProperty({ description: 'Maps this user has not captured yet' })
+  mapsLeft: number;
 }

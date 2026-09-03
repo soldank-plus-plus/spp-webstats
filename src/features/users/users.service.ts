@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
+import { MapEntity } from '@api/features/maps/map.entity';
 import { UserEntity } from './user.entity';
 import { USERS_PAGINATION_CONFIG } from './users.pagination';
 
@@ -11,8 +12,13 @@ type Placement = {
   golds: number;
 };
 
-type UserDetails = UserEntity & {
+type EnrichedUser = UserEntity & {
+  passed: number;
+};
+
+type UserDetails = EnrichedUser & {
   placement: Placement;
+  mapsLeft: number;
 };
 
 @Injectable()
@@ -20,10 +26,22 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    @InjectRepository(MapEntity)
+    private readonly mapsRepository: Repository<MapEntity>,
   ) {}
 
-  findAll(query: PaginateQuery): Promise<Paginated<UserEntity>> {
-    return paginate(query, this.usersRepository, USERS_PAGINATION_CONFIG);
+  async findAll(query: PaginateQuery): Promise<Paginated<UserEntity>> {
+    const result = await paginate(
+      query,
+      this.usersRepository,
+      USERS_PAGINATION_CONFIG,
+    );
+
+    const totalMaps = await this.mapsRepository.count();
+
+    result.data = result.data.map((user) => this.withPassed(user, totalMaps));
+
+    return result;
   }
 
   async findOne(id: number): Promise<UserDetails | null> {
@@ -38,10 +56,19 @@ export class UsersService {
     return user && this.withDetails(user);
   }
 
+  private withPassed(user: UserEntity, totalMaps: number): EnrichedUser {
+    const passed = totalMaps ? ((user.uniqueCaps ?? 0) / totalMaps) * 100 : 0;
+
+    return { ...user, passed: Math.round(passed * 10) / 10 };
+  }
+
   private async withDetails(user: UserEntity): Promise<UserDetails> {
+    const totalMaps = await this.mapsRepository.count();
+
     return {
-      ...user,
+      ...this.withPassed(user, totalMaps),
       placement: await this.findPlacement(user),
+      mapsLeft: Math.max(totalMaps - (user.uniqueCaps ?? 0), 0),
     };
   }
 
