@@ -25,7 +25,7 @@ export default new DataSource({
     EventEntity,
     StatEntity,
   ],
-  migrations: ['src/migrations/*.ts'],
+  migrations: ['src/database/migrations/*.ts'],
   synchronize: false,
   logging: true,
 });

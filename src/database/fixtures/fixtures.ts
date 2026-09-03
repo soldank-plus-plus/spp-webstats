@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import AppDataSource from './data-source';
+import AppDataSource from '../data-source';
 import { UserEntity } from '@api/users/user.entity';
 import { MapEntity } from '@api/maps/map.entity';
 import { EventEntity } from '@api/events/event.entity';
