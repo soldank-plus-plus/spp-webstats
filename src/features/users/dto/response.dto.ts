@@ -11,6 +11,22 @@ export class FindAllUsersDto {
   username: string;
 
   @Expose()
+  @ApiProperty({
+    description: 'Clan this user belongs to',
+    nullable: true,
+    type: Number,
+  })
+  clanId: number | null;
+
+  @Expose()
+  @ApiProperty({
+    description: 'Country this user plays from',
+    nullable: true,
+    type: Number,
+  })
+  countryId: number | null;
+
+  @Expose()
   @ApiProperty({ description: 'Gold medals', nullable: true, type: Number })
   gold: number | null;
 
