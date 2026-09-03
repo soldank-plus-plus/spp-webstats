@@ -18,14 +18,14 @@ import {
   Serialize,
   SerializePaginate,
 } from '@api/shared/serialization/serialize';
-import { EventsService } from '@api/events/events.service';
-import { EventEntity } from '@api/events/event.entity';
-import { FindAllEventsDto } from '@api/events/dto/response.dto';
-import { EVENTS_PAGINATION_CONFIG } from '@api/events/events.pagination';
-import { StatsService } from '@api/stats/stats.service';
-import { StatEntity } from '@api/stats/stat.entity';
-import { FindAllStatsDto } from '@api/stats/dto/response.dto';
-import { STATS_PAGINATION_CONFIG } from '@api/stats/stats.pagination';
+import { EventsService } from '@api/features/events/events.service';
+import { EventEntity } from '@api/features/events/event.entity';
+import { FindAllEventsDto } from '@api/features/events/dto/response.dto';
+import { EVENTS_PAGINATION_CONFIG } from '@api/features/events/events.pagination';
+import { StatsService } from '@api/features/stats/stats.service';
+import { StatEntity } from '@api/features/stats/stat.entity';
+import { FindAllStatsDto } from '@api/features/stats/dto/response.dto';
+import { STATS_PAGINATION_CONFIG } from '@api/features/stats/stats.pagination';
 import { MapsService } from './maps.service';
 import { MapEntity } from './map.entity';
 import { FindAllMapsDto } from './dto/response.dto';

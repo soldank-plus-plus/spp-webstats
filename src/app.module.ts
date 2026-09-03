@@ -4,18 +4,18 @@ import { ConfigType, configValidationSchema } from '@api/config/env';
 import { Environment } from '@api/config/types';
 import { LoggerMiddleware } from '@api/logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '@api/users/user.entity';
-import { ClanEntity } from '@api/clans/clan.entity';
-import { CountryEntity } from '@api/countries/country.entity';
-import { MapEntity } from '@api/maps/map.entity';
-import { EventEntity } from '@api/events/event.entity';
-import { StatEntity } from '@api/stats/stat.entity';
-import { EventsModule } from '@api/events/events.module';
-import { MapsModule } from '@api/maps/maps.module';
-import { UsersModule } from '@api/users/users.module';
-import { StatsModule } from '@api/stats/stats.module';
-import { ClansModule } from '@api/clans/clans.module';
-import { CountriesModule } from '@api/countries/countries.module';
+import { UserEntity } from '@api/features/users/user.entity';
+import { ClanEntity } from '@api/features/clans/clan.entity';
+import { CountryEntity } from '@api/features/countries/country.entity';
+import { MapEntity } from '@api/features/maps/map.entity';
+import { EventEntity } from '@api/features/events/event.entity';
+import { StatEntity } from '@api/features/stats/stat.entity';
+import { EventsModule } from '@api/features/events/events.module';
+import { MapsModule } from '@api/features/maps/maps.module';
+import { UsersModule } from '@api/features/users/users.module';
+import { StatsModule } from '@api/features/stats/stats.module';
+import { ClansModule } from '@api/features/clans/clans.module';
+import { CountriesModule } from '@api/features/countries/countries.module';
 
 @Module({
   imports: [

@@ -9,11 +9,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { ClanEntity } from '@api/clans/clan.entity';
-import { CountryEntity } from '@api/countries/country.entity';
-import { EventEntity } from '@api/events/event.entity';
-import { MapEntity } from '@api/maps/map.entity';
-import { StatEntity } from '@api/stats/stat.entity';
+import { ClanEntity } from '@api/features/clans/clan.entity';
+import { CountryEntity } from '@api/features/countries/country.entity';
+import { EventEntity } from '@api/features/events/event.entity';
+import { MapEntity } from '@api/features/maps/map.entity';
+import { StatEntity } from '@api/features/stats/stat.entity';
 import { bigintTransformer } from '@api/database/transformers/bigint.transformer';
 
 @Entity('users')

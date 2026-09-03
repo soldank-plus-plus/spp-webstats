@@ -1,6 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '@api/users/user.entity';
+import { UserEntity } from '@api/features/users/user.entity';
 
 class MapCreatorDto {
   @Expose()

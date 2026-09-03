@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { UserEntity } from '@api/users/user.entity';
-import { ClanEntity } from '@api/clans/clan.entity';
-import { CountryEntity } from '@api/countries/country.entity';
-import { MapEntity } from '@api/maps/map.entity';
-import { EventEntity } from '@api/events/event.entity';
-import { StatEntity } from '@api/stats/stat.entity';
+import { UserEntity } from '@api/features/users/user.entity';
+import { ClanEntity } from '@api/features/clans/clan.entity';
+import { CountryEntity } from '@api/features/countries/country.entity';
+import { MapEntity } from '@api/features/maps/map.entity';
+import { EventEntity } from '@api/features/events/event.entity';
+import { StatEntity } from '@api/features/stats/stat.entity';
 
 dotenv.config();
 

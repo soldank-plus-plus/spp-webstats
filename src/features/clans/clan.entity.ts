@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { UserEntity } from '@api/users/user.entity';
+import { UserEntity } from '@api/features/users/user.entity';
 
 @Entity('clans')
 @Index('idx_clans_name', ['clanname'])

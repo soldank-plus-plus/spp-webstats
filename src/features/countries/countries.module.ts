@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '@api/users/user.entity';
+import { UserEntity } from '@api/features/users/user.entity';
 import { CountryEntity } from './country.entity';
 import { CountriesController } from './countries.controller';
 import { CountriesService } from './countries.service';

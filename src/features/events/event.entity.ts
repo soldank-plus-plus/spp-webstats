@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { MapEntity } from '@api/maps/map.entity';
-import { UserEntity } from '@api/users/user.entity';
+import { MapEntity } from '@api/features/maps/map.entity';
+import { UserEntity } from '@api/features/users/user.entity';
 import { bigintTransformer } from '@api/database/transformers/bigint.transformer';
 
 @Entity('events')

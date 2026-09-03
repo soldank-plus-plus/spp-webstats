@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventsModule } from '@api/events/events.module';
-import { StatsModule } from '@api/stats/stats.module';
+import { EventsModule } from '@api/features/events/events.module';
+import { StatsModule } from '@api/features/stats/stats.module';
 import { UserEntity } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';

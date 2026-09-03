@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
-import { UserEntity } from '@api/users/user.entity';
+import { UserEntity } from '@api/features/users/user.entity';
 import { ClanEntity } from './clan.entity';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
 

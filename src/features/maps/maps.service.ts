@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
 import { MapEntity } from './map.entity';
-import { StatEntity } from '@api/stats/stat.entity';
-import { UserEntity } from '@api/users/user.entity';
+import { StatEntity } from '@api/features/stats/stat.entity';
+import { UserEntity } from '@api/features/users/user.entity';
 import { MAPS_PAGINATION_CONFIG } from './maps.pagination';
 
 type EnrichedMap = MapEntity & {
