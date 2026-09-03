@@ -1,7 +1,8 @@
 # Personal guidelines for LLM
 GUIDELINES.md
+memory/
 
-# compiled output
+# Compiled output
 /dist
 /node_modules
 /build
@@ -21,6 +22,8 @@ lerna-debug.log*
 # Tests
 /coverage
 /.nyc_output
+test.sql
+test.db
 
 # IDEs and editors
 /.idea
@@ -38,14 +41,14 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# dotenv environment variable files
+# Dotenv environment variable files
 .env
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
 
-# temp directory
+# Temp directory
 .temp
 .tmp
 
