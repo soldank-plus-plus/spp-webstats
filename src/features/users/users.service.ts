@@ -1,10 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
+import { Repository, SelectQueryBuilder } from 'typeorm';
+import {
+  paginate,
+  PaginateConfig,
+  PaginateQuery,
+  Paginated,
+} from 'nestjs-paginate';
 import { MapEntity } from '@api/features/maps/map.entity';
 import { UserEntity } from './user.entity';
-import { USERS_PAGINATION_CONFIG } from './users.pagination';
+import {
+  RANKED_USERS_PAGINATION_CONFIG,
+  USERS_PAGINATION_CONFIG,
+} from './users.pagination';
 
 type Placement = {
   records: number;
@@ -30,18 +38,42 @@ export class UsersService {
     private readonly mapsRepository: Repository<MapEntity>,
   ) {}
 
-  async findAll(query: PaginateQuery): Promise<Paginated<UserEntity>> {
-    const result = await paginate(
-      query,
+  findAll(query: PaginateQuery): Promise<Paginated<UserEntity>> {
+    return this.paginateWithPassed(
       this.usersRepository,
+      query,
       USERS_PAGINATION_CONFIG,
     );
+  }
 
-    const totalMaps = await this.mapsRepository.count();
+  findAllForClan(
+    clanId: number,
+    query: PaginateQuery,
+  ): Promise<Paginated<UserEntity>> {
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.clanId = :clanId', { clanId });
 
-    result.data = result.data.map((user) => this.withPassed(user, totalMaps));
+    return this.paginateWithPassed(
+      queryBuilder,
+      query,
+      RANKED_USERS_PAGINATION_CONFIG,
+    );
+  }
 
-    return result;
+  findAllForCountry(
+    countryId: number,
+    query: PaginateQuery,
+  ): Promise<Paginated<UserEntity>> {
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.countryId = :countryId', { countryId });
+
+    return this.paginateWithPassed(
+      queryBuilder,
+      query,
+      RANKED_USERS_PAGINATION_CONFIG,
+    );
   }
 
   async findOne(id: number): Promise<UserDetails | null> {
@@ -54,6 +86,20 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({ username });
 
     return user && this.withDetails(user);
+  }
+
+  // Every user listing goes through here, so they all carry the same fields
+  private async paginateWithPassed(
+    source: Repository<UserEntity> | SelectQueryBuilder<UserEntity>,
+    query: PaginateQuery,
+    config: PaginateConfig<UserEntity>,
+  ): Promise<Paginated<UserEntity>> {
+    const result = await paginate(query, source, config);
+    const totalMaps = await this.mapsRepository.count();
+
+    result.data = result.data.map((user) => this.withPassed(user, totalMaps));
+
+    return result;
   }
 
   private withPassed(user: UserEntity, totalMaps: number): EnrichedUser {

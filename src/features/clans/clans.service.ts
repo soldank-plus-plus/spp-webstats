@@ -20,6 +20,10 @@ export class ClansService {
     private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
+  exists(id: number): Promise<boolean> {
+    return this.clansRepository.existsBy({ id });
+  }
+
   async findAll(query: PaginateQuery): Promise<Paginated<ClanEntity>> {
     const result = await paginate(
       query,

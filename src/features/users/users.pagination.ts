@@ -23,3 +23,10 @@ export const USERS_PAGINATION_CONFIG: PaginateConfig<UserEntity> = {
   defaultLimit: DEFAULT_LIMIT,
   paginationType: PaginationType.LIMIT_AND_OFFSET,
 };
+
+// Clan rosters and country listings read as rankings, so they lead with the
+// best players rather than with whoever registered first
+export const RANKED_USERS_PAGINATION_CONFIG: PaginateConfig<UserEntity> = {
+  ...USERS_PAGINATION_CONFIG,
+  defaultSortBy: [['uniqueCaps', 'DESC']],
+};

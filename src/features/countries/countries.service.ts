@@ -19,6 +19,10 @@ export class CountriesService {
     private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
+  exists(id: number): Promise<boolean> {
+    return this.countriesRepository.existsBy({ id });
+  }
+
   async findAll(query: PaginateQuery): Promise<Paginated<CountryEntity>> {
     const result = await paginate(
       query,
