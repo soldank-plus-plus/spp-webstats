@@ -11,7 +11,7 @@ import {
 
 import { ClanEntity } from '@api/features/clans/clan.entity';
 import { CountryEntity } from '@api/features/countries/country.entity';
-import { EventEntity } from '@api/features/events/event.entity';
+import { PositionEntity } from '@api/features/positions/position.entity';
 import { MapEntity } from '@api/features/maps/map.entity';
 import { StatEntity } from '@api/features/stats/stat.entity';
 import { bigintTransformer } from '@api/database/transformers/bigint.transformer';
@@ -73,8 +73,8 @@ export class UserEntity {
   })
   lastActiveAt: number | null;
 
-  @OneToMany(() => EventEntity, (event) => event.user)
-  events: EventEntity[];
+  @OneToMany(() => PositionEntity, (position) => position.user)
+  positions: PositionEntity[];
 
   @OneToMany(() => StatEntity, (stat) => stat.user)
   stats: StatEntity[];

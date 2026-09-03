@@ -5,7 +5,7 @@ import { UserEntity } from '@api/features/users/user.entity';
 import { ClanEntity } from '@api/features/clans/clan.entity';
 import { CountryEntity } from '@api/features/countries/country.entity';
 import { MapEntity } from '@api/features/maps/map.entity';
-import { EventEntity } from '@api/features/events/event.entity';
+import { PositionEntity } from '@api/features/positions/position.entity';
 import { StatEntity } from '@api/features/stats/stat.entity';
 
 dotenv.config();
@@ -22,7 +22,7 @@ export default new DataSource({
     ClanEntity,
     CountryEntity,
     MapEntity,
-    EventEntity,
+    PositionEntity,
     StatEntity,
   ],
   migrations: ['src/database/migrations/*.ts'],

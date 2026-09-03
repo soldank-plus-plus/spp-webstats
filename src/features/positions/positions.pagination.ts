@@ -3,17 +3,17 @@ import {
   DEFAULT_LIMIT,
   DEFAULT_MAX_LIMIT,
 } from '@api/shared/pagination/pagination.constants';
-import { EventEntity } from './event.entity';
+import { PositionEntity } from './position.entity';
 
-export const EVENTS_PAGINATION_CONFIG: PaginateConfig<EventEntity> = {
+export const POSITIONS_PAGINATION_CONFIG: PaginateConfig<PositionEntity> = {
   relations: ['map', 'user'],
-  sortableColumns: ['id', 'type', 'medal', 'eventDate'],
+  sortableColumns: ['id', 'type', 'medal', 'positionDate'],
   searchableColumns: ['user.username', 'map.mapname'],
   defaultSortBy: [['id', 'ASC']],
   filterableColumns: {
     type: true,
     medal: true,
-    eventDate: true,
+    positionDate: true,
   },
   maxLimit: DEFAULT_MAX_LIMIT,
   defaultLimit: DEFAULT_LIMIT,

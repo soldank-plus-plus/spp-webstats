@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventsModule } from '@api/features/events/events.module';
+import { PositionsModule } from '@api/features/positions/positions.module';
 import { StatsModule } from '@api/features/stats/stats.module';
 import { MapEntity } from '@api/features/maps/map.entity';
 import { UserEntity } from './user.entity';
@@ -10,7 +10,7 @@ import { UsersService } from './users.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, MapEntity]),
-    EventsModule,
+    PositionsModule,
     StatsModule,
   ],
   controllers: [UsersController],

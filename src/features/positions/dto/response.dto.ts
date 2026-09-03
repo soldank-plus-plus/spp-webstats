@@ -1,18 +1,18 @@
 import { Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class FindAllEventsDto {
+export class FindAllPositionsDto {
   @Expose()
-  @ApiProperty({ description: 'Event ID' })
+  @ApiProperty({ description: 'Position ID' })
   id: number;
 
   @Expose()
-  @ApiProperty({ description: 'Event type' })
+  @ApiProperty({ description: 'Position type' })
   type: number;
 
   @Expose()
   @ApiProperty({
-    description: 'Medal awarded for the event',
+    description: 'Medal awarded for the position',
     nullable: true,
     type: Number,
   })
@@ -20,11 +20,11 @@ export class FindAllEventsDto {
 
   @Expose()
   @ApiProperty({
-    description: 'Event date as a unix timestamp in milliseconds',
+    description: 'Position date as a unix timestamp in milliseconds',
     nullable: true,
     type: Number,
   })
-  eventDate: number | null;
+  positionDate: number | null;
 
   @Expose()
   @ApiProperty({ description: 'Map ID', nullable: true, type: Number })

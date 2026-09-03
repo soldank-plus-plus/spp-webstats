@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import AppDataSource from '../data-source';
 import { UserEntity } from '@api/features/users/user.entity';
 import { MapEntity } from '@api/features/maps/map.entity';
-import { EventEntity } from '@api/features/events/event.entity';
+import { PositionEntity } from '@api/features/positions/position.entity';
 import { StatEntity } from '@api/features/stats/stat.entity';
 
 // refId is the original id from climb.sql (the real legacy dataset) this
@@ -224,20 +224,80 @@ const mapCreators: { mapRefId: number; userRefId: number }[] = [
   { mapRefId: 10, userRefId: 662 },
 ];
 
-const events: (Partial<EventEntity> & {
+const positions: (Partial<PositionEntity> & {
   mapRefId: number;
   userRefId: number;
 })[] = [
-  { type: 1, mapRefId: 1, userRefId: 5423, medal: 1, eventDate: 1572810519000 },
-  { type: 1, mapRefId: 1, userRefId: 2948, medal: 1, eventDate: 1574346448000 },
-  { type: 3, mapRefId: 1, userRefId: 5423, medal: 1, eventDate: 1574346448000 },
-  { type: 1, mapRefId: 1, userRefId: 5423, medal: 2, eventDate: 1574346448000 },
-  { type: 1, mapRefId: 1, userRefId: 3620, medal: 1, eventDate: 1574348729000 },
-  { type: 3, mapRefId: 1, userRefId: 2948, medal: 1, eventDate: 1574348729000 },
-  { type: 1, mapRefId: 1, userRefId: 2948, medal: 2, eventDate: 1574348729000 },
-  { type: 3, mapRefId: 1, userRefId: 5423, medal: 2, eventDate: 1574348729000 },
-  { type: 1, mapRefId: 1, userRefId: 5423, medal: 3, eventDate: 1574348729000 },
-  { type: 1, mapRefId: 1, userRefId: 662, medal: 1, eventDate: 1574352577000 },
+  {
+    type: 1,
+    mapRefId: 1,
+    userRefId: 5423,
+    medal: 1,
+    positionDate: 1572810519000,
+  },
+  {
+    type: 1,
+    mapRefId: 1,
+    userRefId: 2948,
+    medal: 1,
+    positionDate: 1574346448000,
+  },
+  {
+    type: 3,
+    mapRefId: 1,
+    userRefId: 5423,
+    medal: 1,
+    positionDate: 1574346448000,
+  },
+  {
+    type: 1,
+    mapRefId: 1,
+    userRefId: 5423,
+    medal: 2,
+    positionDate: 1574346448000,
+  },
+  {
+    type: 1,
+    mapRefId: 1,
+    userRefId: 3620,
+    medal: 1,
+    positionDate: 1574348729000,
+  },
+  {
+    type: 3,
+    mapRefId: 1,
+    userRefId: 2948,
+    medal: 1,
+    positionDate: 1574348729000,
+  },
+  {
+    type: 1,
+    mapRefId: 1,
+    userRefId: 2948,
+    medal: 2,
+    positionDate: 1574348729000,
+  },
+  {
+    type: 3,
+    mapRefId: 1,
+    userRefId: 5423,
+    medal: 2,
+    positionDate: 1574348729000,
+  },
+  {
+    type: 1,
+    mapRefId: 1,
+    userRefId: 5423,
+    medal: 3,
+    positionDate: 1574348729000,
+  },
+  {
+    type: 1,
+    mapRefId: 1,
+    userRefId: 662,
+    medal: 1,
+    positionDate: 1574352577000,
+  },
 ];
 
 const stats: (Partial<StatEntity> & { mapRefId: number; userRefId: number })[] =
@@ -319,9 +379,9 @@ async function run() {
       )
       .execute();
 
-    await dataSource.getRepository(EventEntity).insert(
-      events.map(({ mapRefId, userRefId, ...event }) => ({
-        ...event,
+    await dataSource.getRepository(PositionEntity).insert(
+      positions.map(({ mapRefId, userRefId, ...position }) => ({
+        ...position,
         mapId: mapIdByRef.get(mapRefId),
         userId: userIdByRef.get(userRefId),
       })),

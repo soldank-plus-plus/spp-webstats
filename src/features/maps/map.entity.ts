@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { EventEntity } from '@api/features/events/event.entity';
+import { PositionEntity } from '@api/features/positions/position.entity';
 import { StatEntity } from '@api/features/stats/stat.entity';
 import { UserEntity } from '@api/features/users/user.entity';
 
@@ -48,8 +48,8 @@ export class MapEntity {
   @Column('integer', { default: 0, nullable: true })
   hardest: number | null;
 
-  @OneToMany(() => EventEntity, (event) => event.map)
-  events: EventEntity[];
+  @OneToMany(() => PositionEntity, (position) => position.map)
+  positions: PositionEntity[];
 
   @OneToMany(() => StatEntity, (stat) => stat.map)
   stats: StatEntity[];

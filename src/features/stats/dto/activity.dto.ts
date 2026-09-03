@@ -7,6 +7,6 @@ export class ActivityDayDto {
   day: string;
 
   @Expose()
-  @ApiProperty({ description: 'Number of events on this day' })
+  @ApiProperty({ description: 'Number of records on this day' })
   count: number;
 }

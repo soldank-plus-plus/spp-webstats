@@ -8,9 +8,9 @@ import { UserEntity } from '@api/features/users/user.entity';
 import { ClanEntity } from '@api/features/clans/clan.entity';
 import { CountryEntity } from '@api/features/countries/country.entity';
 import { MapEntity } from '@api/features/maps/map.entity';
-import { EventEntity } from '@api/features/events/event.entity';
+import { PositionEntity } from '@api/features/positions/position.entity';
 import { StatEntity } from '@api/features/stats/stat.entity';
-import { EventsModule } from '@api/features/events/events.module';
+import { PositionsModule } from '@api/features/positions/positions.module';
 import { MapsModule } from '@api/features/maps/maps.module';
 import { UsersModule } from '@api/features/users/users.module';
 import { StatsModule } from '@api/features/stats/stats.module';
@@ -40,7 +40,7 @@ import { CountriesModule } from '@api/features/countries/countries.module';
           ClanEntity,
           CountryEntity,
           MapEntity,
-          EventEntity,
+          PositionEntity,
           StatEntity,
         ],
         synchronize:
@@ -48,7 +48,7 @@ import { CountriesModule } from '@api/features/countries/countries.module';
         logging: true,
       }),
     }),
-    EventsModule,
+    PositionsModule,
     MapsModule,
     UsersModule,
     StatsModule,

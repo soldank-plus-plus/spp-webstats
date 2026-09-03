@@ -18,10 +18,10 @@ import {
   Serialize,
   SerializePaginate,
 } from '@api/shared/serialization/serialize';
-import { EventsService } from '@api/features/events/events.service';
-import { EventEntity } from '@api/features/events/event.entity';
-import { FindAllEventsDto } from '@api/features/events/dto/response.dto';
-import { EVENTS_PAGINATION_CONFIG } from '@api/features/events/events.pagination';
+import { PositionsService } from '@api/features/positions/positions.service';
+import { PositionEntity } from '@api/features/positions/position.entity';
+import { FindAllPositionsDto } from '@api/features/positions/dto/response.dto';
+import { POSITIONS_PAGINATION_CONFIG } from '@api/features/positions/positions.pagination';
 import { StatsService } from '@api/features/stats/stats.service';
 import { StatEntity } from '@api/features/stats/stat.entity';
 import { FindAllStatsDto } from '@api/features/stats/dto/response.dto';
@@ -36,7 +36,7 @@ import { MAPS_PAGINATION_CONFIG } from './maps.pagination';
 export class MapsController {
   constructor(
     private readonly mapsService: MapsService,
-    private readonly eventsService: EventsService,
+    private readonly positionsService: PositionsService,
     private readonly statsService: StatsService,
   ) {}
 
@@ -73,16 +73,16 @@ export class MapsController {
     return this.mapsService.findAllByUser(userId);
   }
 
-  @Get(':mapId/events')
+  @Get(':mapId/positions')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get events for a map' })
-  @PaginatedSwaggerDocs(FindAllEventsDto, EVENTS_PAGINATION_CONFIG)
-  @SerializePaginate(FindAllEventsDto)
-  findEvents(
+  @ApiOperation({ summary: 'Get positions for a map' })
+  @PaginatedSwaggerDocs(FindAllPositionsDto, POSITIONS_PAGINATION_CONFIG)
+  @SerializePaginate(FindAllPositionsDto)
+  findPositions(
     @Param('mapId', ParseIntPipe) mapId: number,
     @Paginate() query: PaginateQuery,
-  ): Promise<Paginated<EventEntity>> {
-    return this.eventsService.findAllForMap(mapId, query);
+  ): Promise<Paginated<PositionEntity>> {
+    return this.positionsService.findAllForMap(mapId, query);
   }
 
   @Get(':mapId/stats')

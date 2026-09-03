@@ -11,12 +11,12 @@ import { MapEntity } from '@api/features/maps/map.entity';
 import { UserEntity } from '@api/features/users/user.entity';
 import { bigintTransformer } from '@api/database/transformers/bigint.transformer';
 
-@Entity('events')
-@Index('idx_events_map_id', ['mapId'])
-@Index('idx_events_user_id', ['userId'])
-@Index('idx_events_date', ['eventDate'])
-@Index('idx_events_map_type', ['mapId', 'type', 'medal'])
-export class EventEntity {
+@Entity('positions')
+@Index('idx_positions_map_id', ['mapId'])
+@Index('idx_positions_user_id', ['userId'])
+@Index('idx_positions_date', ['positionDate'])
+@Index('idx_positions_map_type', ['mapId', 'type', 'medal'])
+export class PositionEntity {
   @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
 
@@ -33,17 +33,17 @@ export class EventEntity {
   medal: number | null;
 
   @Column('bigint', {
-    name: 'event_date',
+    name: 'position_date',
     nullable: true,
     transformer: bigintTransformer,
   })
-  eventDate: number | null;
+  positionDate: number | null;
 
-  @ManyToOne(() => MapEntity, (map) => map.events, { nullable: true })
+  @ManyToOne(() => MapEntity, (map) => map.positions, { nullable: true })
   @JoinColumn({ name: 'map_id' })
   map: MapEntity | null;
 
-  @ManyToOne(() => UserEntity, (user) => user.events, { nullable: true })
+  @ManyToOne(() => UserEntity, (user) => user.positions, { nullable: true })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity | null;
 }

@@ -20,10 +20,10 @@ import {
   Serialize,
   SerializePaginate,
 } from '@api/shared/serialization/serialize';
-import { EventsService } from '@api/features/events/events.service';
-import { EventEntity } from '@api/features/events/event.entity';
-import { FindAllEventsDto } from '@api/features/events/dto/response.dto';
-import { EVENTS_PAGINATION_CONFIG } from '@api/features/events/events.pagination';
+import { PositionsService } from '@api/features/positions/positions.service';
+import { PositionEntity } from '@api/features/positions/position.entity';
+import { FindAllPositionsDto } from '@api/features/positions/dto/response.dto';
+import { POSITIONS_PAGINATION_CONFIG } from '@api/features/positions/positions.pagination';
 import {
   ACTIVITY_TYPES,
   ActivityType,
@@ -43,7 +43,7 @@ import { USERS_PAGINATION_CONFIG } from './users.pagination';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly eventsService: EventsService,
+    private readonly positionsService: PositionsService,
     private readonly statsService: StatsService,
   ) {}
 
@@ -86,16 +86,16 @@ export class UsersController {
     return user;
   }
 
-  @Get(':userId/events')
+  @Get(':userId/positions')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get events for a user' })
-  @PaginatedSwaggerDocs(FindAllEventsDto, EVENTS_PAGINATION_CONFIG)
-  @SerializePaginate(FindAllEventsDto)
-  findEvents(
+  @ApiOperation({ summary: 'Get positions for a user' })
+  @PaginatedSwaggerDocs(FindAllPositionsDto, POSITIONS_PAGINATION_CONFIG)
+  @SerializePaginate(FindAllPositionsDto)
+  findPositions(
     @Param('userId', ParseIntPipe) userId: number,
     @Paginate() query: PaginateQuery,
-  ): Promise<Paginated<EventEntity>> {
-    return this.eventsService.findAllForUser(userId, query);
+  ): Promise<Paginated<PositionEntity>> {
+    return this.positionsService.findAllForUser(userId, query);
   }
 
   @Get(':userId/stats')
