@@ -20,7 +20,7 @@ npm run start:dev
 
 Swagger docs are served at `/api` when `NODE_ENV=development`. Path alias `@api/*` resolves to `src/*`.
 
-Migrations live in `src/migrations/`, driven by `src/data-source.ts`; see `npm run migration:generate/run/revert/reload` in package.json. `npm run fixtures` seeds sample dev data (insert-only, not idempotent).
+Migrations live in `src/database/migrations/`, driven by `src/database/data-source.ts`; see `npm run migration:generate/run/revert/reload` in package.json. `npm run fixtures` seeds sample dev data (insert-only, not idempotent).
 
 ## Tests
 
@@ -28,13 +28,13 @@ Jest is configured (`npm run test`, `npm run test:e2e`, `npm run test:cov`), but
 
 ## Architecture
 
-Feature-module pattern, one folder per resource under `src/` (e.g. `src/events/`, `src/maps/`):
+Feature-module pattern, one folder per resource under `src/features/` (e.g. `src/features/events/`, `src/features/maps/`):
 - `<name>.entity.ts`: TypeORM entity, camelCase properties mapped to snake_case columns via `name:`.
 - `<name>.controller.ts` / `<name>.service.ts` / `<name>.module.ts`: standard Nest controller/service/module.
 - `dto/response.dto.ts`: class-transformer DTO; only fields marked `@Expose()` are serialized out.
 - `<name>.pagination.ts`: `nestjs-paginate` `PaginateConfig` (sortable/filterable columns, relations, limits).
 
-Global wiring lives in `main.ts`: `ValidationPipe` (whitelist, forbid unknown/non-whitelisted fields), `ErrorMessageInterceptor` (flattens class-validator's array of messages into one string), `SerializeInterceptor` (strips any field not marked `@Expose()` on the handler's DTO, driven by the `@Serialize`/`@SerializePaginate` decorators in `src/serialize.ts`).
+Global wiring lives in `main.ts`: `ValidationPipe` (whitelist, forbid unknown/non-whitelisted fields), `ErrorMessageInterceptor` (flattens class-validator's array of messages into one string), `SerializeInterceptor` (strips any field not marked `@Expose()` on the handler's DTO, driven by the `@Serialize`/`@SerializePaginate` decorators in `src/shared/serialization/serialize.ts`).
 
 Config is loaded and validated via `@nestjs/config` + Joi in `src/config/env.ts`. DB connection is `TypeOrmModule.forRootAsync`; `synchronize` is only true when `NODE_ENV=development`, so real schema changes go through migrations.
 

@@ -65,7 +65,7 @@ docker compose down -v
 ```
 
 ### Migrations
-Migrations live in `src/migrations/` and are driven by `src/data-source.ts`. The `migrations` table in Postgres tracks which ones have run.
+Migrations live in `src/database/migrations/` and are driven by `src/database/data-source.ts`. The `migrations` table in Postgres tracks which ones have run.
 
 Generate a migration from the diff between the entities and the current database schema (the DB from `docker compose up -d` must be running):
 
