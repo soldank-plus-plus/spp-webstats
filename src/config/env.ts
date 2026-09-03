@@ -1,6 +1,6 @@
 import Joi, { ObjectSchema } from 'joi';
 
-import { Environment } from '@api/types';
+import { Environment } from '@api/config/types';
 
 export type ConfigType = {
   NODE_ENV: string;

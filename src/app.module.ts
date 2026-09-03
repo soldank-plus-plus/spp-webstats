@@ -1,7 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigType, configValidationSchema } from '@api/config/env';
-import { Environment } from '@api/types';
+import { Environment } from '@api/config/types';
 import { LoggerMiddleware } from '@api/logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '@api/users/user.entity';
