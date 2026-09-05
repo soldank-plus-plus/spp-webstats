@@ -45,15 +45,21 @@ export class MapsService {
     return enriched;
   }
 
-  async findAllByUser(userId: number): Promise<MapEntity[]> {
-    const maps = await this.mapsRepository
+  async findAllByUser(
+    userId: number,
+    query: PaginateQuery,
+  ): Promise<Paginated<MapEntity>> {
+    const queryBuilder = this.mapsRepository
       .createQueryBuilder('map')
       .innerJoin('map.creators', 'creator', 'creator.id = :userId', {
         userId,
-      })
-      .getMany();
+      });
 
-    return this.enrich(maps);
+    const result = await paginate(query, queryBuilder, MAPS_PAGINATION_CONFIG);
+
+    result.data = await this.enrich(result.data);
+
+    return result;
   }
 
   // Fetches creators and records count for a page of maps separately from

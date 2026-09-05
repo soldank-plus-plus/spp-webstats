@@ -66,11 +66,13 @@ export class MapsController {
   @Get('by-user/:userId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get maps created by a user' })
-  @Serialize(FindAllMapsDto, { isArray: true })
+  @PaginatedSwaggerDocs(FindAllMapsDto, MAPS_PAGINATION_CONFIG)
+  @SerializePaginate(FindAllMapsDto)
   findByUser(
     @Param('userId', ParseIntPipe) userId: number,
-  ): Promise<MapEntity[]> {
-    return this.mapsService.findAllByUser(userId);
+    @Paginate() query: PaginateQuery,
+  ): Promise<Paginated<MapEntity>> {
+    return this.mapsService.findAllByUser(userId, query);
   }
 
   @Get(':mapId/positions')
