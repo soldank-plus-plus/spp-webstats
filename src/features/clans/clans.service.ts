@@ -3,8 +3,25 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
 import { UserEntity } from '@api/features/users/user.entity';
+import { StatEntity } from '@api/features/stats/stat.entity';
 import { ClanEntity } from './clan.entity';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
+
+type ClanRecordsHistoryPoint = {
+  label: string;
+  records: number;
+  gold: number;
+  silver: number;
+  bronze: number;
+};
+
+type RecordsHistoryRow = {
+  year: string;
+  records: string;
+  gold: string;
+  silver: string;
+  bronze: string;
+};
 
 type EnrichedClan = ClanEntity & {
   creators: UserEntity[];
@@ -18,6 +35,8 @@ export class ClansService {
     private readonly clansRepository: Repository<ClanEntity>,
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    @InjectRepository(StatEntity)
+    private readonly statsRepository: Repository<StatEntity>,
   ) {}
 
   exists(id: number): Promise<boolean> {
@@ -34,6 +53,72 @@ export class ClansService {
     result.data = await this.enrich(result.data);
 
     return result;
+  }
+
+  async findRecordsHistory(
+    clanId: number,
+    userIds: number[],
+  ): Promise<ClanRecordsHistoryPoint[]> {
+    const memberIds = await this.filterClanMembers(clanId, userIds);
+
+    if (memberIds.length === 0) {
+      return [];
+    }
+
+    // Year keys are pinned to UTC so the buckets stay the same whatever time
+    // zone the database session runs in
+    const rows = await this.statsRepository
+      .createQueryBuilder('stat')
+      .select(
+        "to_char(to_timestamp(stat.recordDate / 1000) AT TIME ZONE 'UTC', 'YYYY')",
+        'year',
+      )
+      .addSelect('COUNT(*)', 'records')
+      .addSelect('COUNT(*) FILTER (WHERE stat.position = 1)', 'gold')
+      .addSelect('COUNT(*) FILTER (WHERE stat.position = 2)', 'silver')
+      .addSelect('COUNT(*) FILTER (WHERE stat.position = 3)', 'bronze')
+      .where('stat.userId IN (:...memberIds)', { memberIds })
+      .andWhere('stat.recordDate IS NOT NULL')
+      .groupBy('year')
+      .getRawMany<RecordsHistoryRow>();
+
+    if (rows.length === 0) {
+      return [];
+    }
+
+    const rowsByYear = new Map(rows.map((row) => [Number(row.year), row]));
+    const years = [...rowsByYear.keys()];
+    const firstYear = Math.min(...years);
+    const lastYear = Math.max(...years);
+
+    // Years in between with no records still get a point, so the lines have no
+    // holes
+    return Array.from({ length: lastYear - firstYear + 1 }, (_, index) => {
+      const year = firstYear + index;
+      const row = rowsByYear.get(year);
+
+      return {
+        label: String(year),
+        records: Number(row?.records ?? 0),
+        gold: Number(row?.gold ?? 0),
+        silver: Number(row?.silver ?? 0),
+        bronze: Number(row?.bronze ?? 0),
+      };
+    });
+  }
+
+  private async filterClanMembers(
+    clanId: number,
+    userIds: number[],
+  ): Promise<number[]> {
+    const rows = await this.usersRepository
+      .createQueryBuilder('user')
+      .select('user.id', 'id')
+      .where('user.clanId = :clanId', { clanId })
+      .andWhere('user.id IN (:...userIds)', { userIds })
+      .getRawMany<{ id: number }>();
+
+    return rows.map((row) => row.id);
   }
 
   // Founders and member counts are fetched for an already-paginated page

@@ -5,16 +5,21 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
-import { SerializePaginate } from '@api/shared/serialization/serialize';
+import {
+  Serialize,
+  SerializePaginate,
+} from '@api/shared/serialization/serialize';
 import { UsersService } from '@api/features/users/users.service';
 import { UserEntity } from '@api/features/users/user.entity';
 import { FindAllUsersDto } from '@api/features/users/dto/response.dto';
@@ -22,6 +27,7 @@ import { RANKED_USERS_PAGINATION_CONFIG } from '@api/features/users/users.pagina
 import { ClansService } from './clans.service';
 import { ClanEntity } from './clan.entity';
 import { FindAllClansDto } from './dto/response.dto';
+import { ClanRecordsHistoryDto } from './dto/records-history.dto';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
 
 @ApiTags('clans')
@@ -55,5 +61,26 @@ export class ClansController {
     }
 
     return this.usersService.findAllForClan(clanId, query);
+  }
+
+  @Get(':clanId/records-history')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get the clan records history' })
+  @ApiQuery({
+    name: 'userIds',
+    type: String,
+    description: 'Comma-separated ids of the clan users to include',
+  })
+  @Serialize(ClanRecordsHistoryDto, { isArray: true })
+  async findRecordsHistory(
+    @Param('clanId', ParseIntPipe) clanId: number,
+    @Query('userIds', new ParseArrayPipe({ items: Number, separator: ',' }))
+    userIds: number[],
+  ): Promise<{ label: string; records: number }[]> {
+    if (!(await this.clansService.exists(clanId))) {
+      throw new NotFoundException('Clan not found');
+    }
+
+    return this.clansService.findRecordsHistory(clanId, userIds);
   }
 }
