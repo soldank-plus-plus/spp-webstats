@@ -6,8 +6,9 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
@@ -43,10 +44,19 @@ export class MapsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all maps' })
+  @ApiQuery({
+    name: 'creator',
+    type: String,
+    required: false,
+    description: 'Keep only maps made by a creator whose name contains this',
+  })
   @PaginatedSwaggerDocs(FindAllMapsDto, MAPS_PAGINATION_CONFIG)
   @SerializePaginate(FindAllMapsDto)
-  findAll(@Paginate() query: PaginateQuery): Promise<Paginated<MapEntity>> {
-    return this.mapsService.findAll(query);
+  findAll(
+    @Paginate() query: PaginateQuery,
+    @Query('creator') creator?: string,
+  ): Promise<Paginated<MapEntity>> {
+    return this.mapsService.findAll(query, creator);
   }
 
   @Get(':id')

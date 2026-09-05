@@ -21,12 +21,27 @@ export class MapsService {
     private readonly statsRepository: Repository<StatEntity>,
   ) {}
 
-  async findAll(query: PaginateQuery): Promise<Paginated<MapEntity>> {
-    const result = await paginate(
-      query,
-      this.mapsRepository,
-      MAPS_PAGINATION_CONFIG,
-    );
+  async findAll(
+    query: PaginateQuery,
+    creator?: string,
+  ): Promise<Paginated<MapEntity>> {
+    const queryBuilder = this.mapsRepository.createQueryBuilder('map');
+
+    // Matched with EXISTS rather than a join, so the to-many relation cannot
+    // multiply the rows the pagination limit is applied to
+    if (creator) {
+      queryBuilder.andWhere(
+        `EXISTS (
+          SELECT 1
+          FROM map_creators mc
+          INNER JOIN users creator ON creator.id = mc.user_id
+          WHERE mc.map_id = map.id AND creator.username ILIKE :creator
+        )`,
+        { creator: `%${creator}%` },
+      );
+    }
+
+    const result = await paginate(query, queryBuilder, MAPS_PAGINATION_CONFIG);
 
     result.data = await this.enrich(result.data);
 
