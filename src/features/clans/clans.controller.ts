@@ -22,11 +22,11 @@ import {
 } from '@api/shared/serialization/serialize';
 import { UsersService } from '@api/features/users/users.service';
 import { UserEntity } from '@api/features/users/user.entity';
-import { FindAllUsersDto } from '@api/features/users/dto/response.dto';
 import { RANKED_USERS_PAGINATION_CONFIG } from '@api/features/users/users.pagination';
 import { ClansService } from './clans.service';
 import { ClanEntity } from './clan.entity';
 import { FindAllClansDto } from './dto/response.dto';
+import { ClanMemberDto } from './dto/clan-member.dto';
 import { ClanRecordsHistoryDto } from './dto/records-history.dto';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
 
@@ -50,8 +50,8 @@ export class ClansController {
   @Get(':clanId/users')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get users in a clan' })
-  @PaginatedSwaggerDocs(FindAllUsersDto, RANKED_USERS_PAGINATION_CONFIG)
-  @SerializePaginate(FindAllUsersDto)
+  @PaginatedSwaggerDocs(ClanMemberDto, RANKED_USERS_PAGINATION_CONFIG)
+  @SerializePaginate(ClanMemberDto)
   async findUsers(
     @Param('clanId', ParseIntPipe) clanId: number,
     @Paginate() query: PaginateQuery,

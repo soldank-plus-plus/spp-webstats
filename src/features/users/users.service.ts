@@ -46,19 +46,53 @@ export class UsersService {
     );
   }
 
-  findAllForClan(
+  async findAllForClan(
     clanId: number,
     query: PaginateQuery,
   ): Promise<Paginated<UserEntity>> {
     const queryBuilder = this.usersRepository
       .createQueryBuilder('user')
-      .where('user.clanId = :clanId', { clanId });
+      .where('user.clanId = :clanId', { clanId })
+      // Founders lead the roster. nestjs-paginate appends its own sorting with
+      // addOrderBy, so this stays the primary key and the requested sort
+      // decides the order within each group. The alias has to be quoted here
+      // because `user` is a reserved word in Postgres
+      .orderBy(
+        `CASE
+          WHEN EXISTS (
+            SELECT 1
+            FROM clan_creators cc
+            WHERE cc.clan_id = :clanId AND cc.user_id = "user".id
+          ) THEN 0
+          ELSE 1
+        END`,
+        'ASC',
+      );
 
-    return this.paginateWithPassed(
+    const result = await this.paginateWithPassed(
       queryBuilder,
       query,
       RANKED_USERS_PAGINATION_CONFIG,
     );
+    const founderIds = await this.findClanFounderIds(clanId);
+
+    result.data = result.data.map((user) => ({
+      ...user,
+      founder: founderIds.has(user.id),
+    }));
+
+    return result;
+  }
+
+  private async findClanFounderIds(clanId: number): Promise<Set<number>> {
+    const rows = await this.usersRepository
+      .createQueryBuilder('user')
+      .select('"user".id', 'id')
+      .innerJoin('clan_creators', 'cc', 'cc.user_id = "user".id')
+      .where('cc.clan_id = :clanId', { clanId })
+      .getRawMany<{ id: number }>();
+
+    return new Set(rows.map((row) => row.id));
   }
 
   findAllForCountry(
