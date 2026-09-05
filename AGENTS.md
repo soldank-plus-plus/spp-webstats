@@ -20,7 +20,7 @@ npm run start:dev
 
 Swagger docs are served at `/api` when `NODE_ENV=development`. Path alias `@api/*` resolves to `src/*`.
 
-Migrations live in `src/database/migrations/`, driven by `src/database/data-source.ts`; see `npm run migration:generate/run/revert/reload` in package.json. `npm run fixtures` seeds sample dev data (insert-only, not idempotent).
+Migrations live in `src/database/migrations/`, driven by `src/database/data-source.ts`; see `npm run migration:generate/run/revert/reload` in package.json. `npm run fixtures` seeds sample dev data from `src/database/fixtures/seed.ts` (insert-only, not idempotent): countries, clans with founders, users, maps with creators, positions, and records spread over several years so the clan and profile charts have something to draw. Use it for local runs and manual testing rather than importing a dump of the legacy dataset.
 
 ## Tests
 
