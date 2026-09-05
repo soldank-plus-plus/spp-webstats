@@ -4,16 +4,41 @@ import { UserEntity } from '@api/features/users/user.entity';
 import { MapEntity } from '@api/features/maps/map.entity';
 import { PositionEntity } from '@api/features/positions/position.entity';
 import { StatEntity } from '@api/features/stats/stat.entity';
+import { ClanEntity } from '@api/features/clans/clan.entity';
+import { CountryEntity } from '@api/features/countries/country.entity';
 
 // refId is the original id from climb.sql (the real legacy dataset) this
 // sample data is copied from. It's only used to wire up relations below
 // before insertion — Postgres assigns the real ids.
-type UserFixture = Partial<UserEntity> & { refId: number };
+type UserFixture = Partial<UserEntity> & {
+  refId: number;
+  clanRefId?: number;
+  countryRefId?: number;
+};
 type MapFixture = Partial<MapEntity> & { refId: number };
+type ClanFixture = Partial<ClanEntity> & { refId: number };
+type CountryFixture = Partial<CountryEntity> & { refId: number };
+
+const countries: CountryFixture[] = [
+  { refId: 1, countryname: 'Poland', code: 'PL' },
+  { refId: 2, countryname: 'Finland', code: 'FI' },
+  { refId: 3, countryname: 'Sweden', code: 'SE' },
+];
+
+const clans: ClanFixture[] = [
+  { refId: 1, clanname: 'deCapitate', tag: '.dC' },
+  { refId: 2, clanname: 'proClimbers', tag: '~>pC.' },
+];
+
+const clanCreators: { clanRefId: number; userRefId: number }[] = [
+  { clanRefId: 1, userRefId: 3620 },
+  { clanRefId: 2, userRefId: 16055 },
+];
 
 const users: UserFixture[] = [
   {
     refId: 662,
+    countryRefId: 2,
     username: 'Vanatox',
     gold: 0,
     silver: 1,
@@ -29,6 +54,8 @@ const users: UserFixture[] = [
   },
   {
     refId: 2937,
+    clanRefId: 2,
+    countryRefId: 1,
     username: 'Lysy z Brazzers',
     gold: 0,
     silver: 0,
@@ -44,6 +71,7 @@ const users: UserFixture[] = [
   },
   {
     refId: 2948,
+    countryRefId: 1,
     username: '|NFS|*unknown*',
     gold: 0,
     silver: 0,
@@ -59,6 +87,7 @@ const users: UserFixture[] = [
   },
   {
     refId: 2952,
+    countryRefId: 3,
     username: 'Viral',
     gold: 1,
     silver: 0,
@@ -74,6 +103,8 @@ const users: UserFixture[] = [
   },
   {
     refId: 3620,
+    clanRefId: 1,
+    countryRefId: 2,
     username: 'Nedi .dC',
     gold: 5,
     silver: 3,
@@ -89,6 +120,8 @@ const users: UserFixture[] = [
   },
   {
     refId: 4427,
+    clanRefId: 2,
+    countryRefId: 1,
     username: '9host',
     gold: 77,
     silver: 76,
@@ -104,6 +137,7 @@ const users: UserFixture[] = [
   },
   {
     refId: 5069,
+    countryRefId: 2,
     username: 'Morko',
     gold: 3,
     silver: 4,
@@ -119,6 +153,7 @@ const users: UserFixture[] = [
   },
   {
     refId: 5071,
+    countryRefId: 3,
     username: '`JacksLostYouth',
     gold: 29,
     silver: 21,
@@ -134,6 +169,8 @@ const users: UserFixture[] = [
   },
   {
     refId: 5154,
+    clanRefId: 1,
+    countryRefId: 2,
     username: 'TikL',
     gold: 0,
     silver: 0,
@@ -149,6 +186,8 @@ const users: UserFixture[] = [
   },
   {
     refId: 5223,
+    clanRefId: 1,
+    countryRefId: 3,
     username: 'Morgondagen',
     gold: 0,
     silver: 0,
@@ -164,6 +203,8 @@ const users: UserFixture[] = [
   },
   {
     refId: 5423,
+    clanRefId: 1,
+    countryRefId: 3,
     username: '|DK| Blue-ninja',
     gold: 1,
     silver: 0,
@@ -179,6 +220,8 @@ const users: UserFixture[] = [
   },
   {
     refId: 16055,
+    clanRefId: 2,
+    countryRefId: 1,
     username: '~>pC. maxghz',
     gold: 0,
     silver: 0,
@@ -206,6 +249,11 @@ const maps: MapFixture[] = [
     anticoop: 1,
     hardest: 29,
   },
+  { refId: 11, mapname: 'ctf_nedi_run', date: 1521072000, hardest: 12 },
+  { refId: 12, mapname: 'rce_tikl_tower', date: 1552608000, hardest: 47 },
+  { refId: 13, mapname: 'mc_blueninja', date: 1584230400, hardest: 3 },
+  { refId: 14, mapname: 'Maxu_Tetris', date: 1615766400, hardest: 61 },
+  { refId: 15, mapname: 'ctf_host_flow', date: 1647302400 },
 ];
 
 const mapCreators: { mapRefId: number; userRefId: number }[] = [
@@ -222,6 +270,12 @@ const mapCreators: { mapRefId: number; userRefId: number }[] = [
   { mapRefId: 10, userRefId: 2948 },
   { mapRefId: 10, userRefId: 16055 },
   { mapRefId: 10, userRefId: 662 },
+  { mapRefId: 11, userRefId: 3620 },
+  { mapRefId: 12, userRefId: 5154 },
+  { mapRefId: 13, userRefId: 5423 },
+  { mapRefId: 14, userRefId: 16055 },
+  { mapRefId: 15, userRefId: 4427 },
+  { mapRefId: 15, userRefId: 2937 },
 ];
 
 const positions: (Partial<PositionEntity> & {
@@ -349,16 +403,103 @@ const stats: (Partial<StatEntity> & { mapRefId: number; userRefId: number })[] =
     },
   ];
 
+// Each entry expands into `count` records spread across that year. This is
+// what gives the clan statistics chart a shape to draw, and the profile
+// activity views something to bucket
+const recordHistory: {
+  userRefId: number;
+  mapRefId: number;
+  year: number;
+  count: number;
+}[] = [
+  { userRefId: 3620, mapRefId: 11, year: 2019, count: 9 },
+  { userRefId: 3620, mapRefId: 12, year: 2020, count: 14 },
+  { userRefId: 3620, mapRefId: 13, year: 2021, count: 6 },
+  { userRefId: 3620, mapRefId: 11, year: 2023, count: 11 },
+  { userRefId: 5154, mapRefId: 12, year: 2019, count: 5 },
+  { userRefId: 5154, mapRefId: 10, year: 2020, count: 18 },
+  { userRefId: 5154, mapRefId: 13, year: 2022, count: 7 },
+  { userRefId: 5154, mapRefId: 12, year: 2024, count: 12 },
+  { userRefId: 5223, mapRefId: 13, year: 2020, count: 8 },
+  { userRefId: 5223, mapRefId: 11, year: 2021, count: 4 },
+  { userRefId: 5223, mapRefId: 10, year: 2024, count: 9 },
+  { userRefId: 5423, mapRefId: 13, year: 2019, count: 12 },
+  { userRefId: 5423, mapRefId: 10, year: 2020, count: 21 },
+  { userRefId: 5423, mapRefId: 12, year: 2021, count: 10 },
+  { userRefId: 5423, mapRefId: 11, year: 2025, count: 6 },
+  { userRefId: 16055, mapRefId: 14, year: 2021, count: 7 },
+  { userRefId: 16055, mapRefId: 2, year: 2022, count: 15 },
+  { userRefId: 16055, mapRefId: 14, year: 2023, count: 9 },
+  { userRefId: 16055, mapRefId: 15, year: 2025, count: 13 },
+  { userRefId: 4427, mapRefId: 15, year: 2022, count: 6 },
+  { userRefId: 4427, mapRefId: 3, year: 2023, count: 17 },
+  { userRefId: 4427, mapRefId: 15, year: 2024, count: 8 },
+  { userRefId: 2937, mapRefId: 1, year: 2023, count: 5 },
+  { userRefId: 2937, mapRefId: 15, year: 2025, count: 10 },
+];
+
+function expandRecordHistory(): (Partial<StatEntity> & {
+  mapRefId: number;
+  userRefId: number;
+})[] {
+  return recordHistory.flatMap(({ userRefId, mapRefId, year, count }) =>
+    Array.from({ length: count }, (_, index) => ({
+      userRefId,
+      mapRefId,
+      // spread across the year so month buckets differ too, not just years
+      recordDate: Date.UTC(year, index % 12, 1 + (index % 27), 12),
+      recordTime: 60000 + index * 1237,
+      // 1st, 2nd and 3rd places are what the medal counts are derived from
+      position: (index % 5) + 1,
+      team: 0,
+      status: 1,
+    })),
+  );
+}
+
 async function run() {
   const dataSource = await AppDataSource.initialize();
 
   try {
-    const userResult = await dataSource
-      .getRepository(UserEntity)
-      .insert(users.map(({ refId: _refId, ...user }) => user));
+    const countryResult = await dataSource
+      .getRepository(CountryEntity)
+      .insert(countries.map(({ refId: _refId, ...country }) => country));
+    const countryIdByRef = new Map<number, number>(
+      countries.map((country, i) => [
+        country.refId,
+        countryResult.identifiers[i].id,
+      ]),
+    );
+
+    const clanResult = await dataSource
+      .getRepository(ClanEntity)
+      .insert(clans.map(({ refId: _refId, ...clan }) => clan));
+    const clanIdByRef = new Map<number, number>(
+      clans.map((clan, i) => [clan.refId, clanResult.identifiers[i].id]),
+    );
+
+    const userResult = await dataSource.getRepository(UserEntity).insert(
+      users.map(({ refId: _refId, clanRefId, countryRefId, ...user }) => ({
+        ...user,
+        clanId: clanRefId ? clanIdByRef.get(clanRefId) : null,
+        countryId: countryRefId ? countryIdByRef.get(countryRefId) : null,
+      })),
+    );
     const userIdByRef = new Map<number, number>(
       users.map((user, i) => [user.refId, userResult.identifiers[i].id]),
     );
+
+    await dataSource
+      .createQueryBuilder()
+      .insert()
+      .into('clan_creators')
+      .values(
+        clanCreators.map(({ clanRefId, userRefId }) => ({
+          clan_id: clanIdByRef.get(clanRefId),
+          user_id: userIdByRef.get(userRefId),
+        })),
+      )
+      .execute();
 
     const mapResult = await dataSource
       .getRepository(MapEntity)
@@ -388,11 +529,13 @@ async function run() {
     );
 
     await dataSource.getRepository(StatEntity).insert(
-      stats.map(({ mapRefId, userRefId, ...stat }) => ({
-        ...stat,
-        mapId: mapIdByRef.get(mapRefId),
-        userId: userIdByRef.get(userRefId),
-      })),
+      [...stats, ...expandRecordHistory()].map(
+        ({ mapRefId, userRefId, ...stat }) => ({
+          ...stat,
+          mapId: mapIdByRef.get(mapRefId),
+          userId: userIdByRef.get(userRefId),
+        }),
+      ),
     );
 
     console.log('Fixtures inserted successfully.');
