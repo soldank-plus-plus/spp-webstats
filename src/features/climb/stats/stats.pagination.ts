@@ -14,6 +14,7 @@ export const STATS_PAGINATION_CONFIG: PaginateConfig<StatEntity> = {
     mapId: true,
     userId: true,
     status: true,
+    position: true,
   },
   maxLimit: DEFAULT_MAX_LIMIT,
   defaultLimit: DEFAULT_LIMIT,

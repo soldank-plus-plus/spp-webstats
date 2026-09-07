@@ -12,6 +12,16 @@ export const MAPS_PAGINATION_CONFIG: PaginateConfig<MapEntity> = {
   filterableColumns: {
     mapname: true,
     date: true,
+    // Ranked maps carry a difficulty, the rest sit at 0
+    hardest: true,
+    // Climb mode flags, stored as 0 or 1 per map
+    anticoop: true,
+    jets: true,
+    m79: true,
+    nade: true,
+    switch: true,
+    coop: true,
+    m79c: true,
   },
   maxLimit: DEFAULT_MAX_LIMIT,
   defaultLimit: DEFAULT_LIMIT,
