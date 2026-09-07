@@ -109,6 +109,20 @@ export class FindAllUsersDto {
   passed: number;
 }
 
+class UserClanDto {
+  @Expose()
+  @ApiProperty({ description: 'Clan ID' })
+  id: number;
+
+  @Expose()
+  @ApiProperty({ description: 'Clan name' })
+  clanname: string;
+
+  @Expose()
+  @ApiProperty({ description: 'Clan tag', nullable: true, type: String })
+  tag: string | null;
+}
+
 class UserPlacementDto {
   @Expose()
   @ApiProperty({ description: 'Place in the unique captures ranking' })
@@ -135,4 +149,13 @@ export class FindOneUserDto extends FindAllUsersDto {
   @Expose()
   @ApiProperty({ description: 'Maps this user has not captured yet' })
   mapsLeft: number;
+
+  @Expose()
+  @Type(() => UserClanDto)
+  @ApiProperty({
+    description: 'Clan this user belongs to',
+    nullable: true,
+    type: UserClanDto,
+  })
+  clan: UserClanDto | null;
 }

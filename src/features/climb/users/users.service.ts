@@ -7,6 +7,7 @@ import {
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
+import { ClanEntity } from '@api/features/climb/clans/clan.entity';
 import { MapEntity } from '@api/features/climb/maps/map.entity';
 import { UserEntity } from './user.entity';
 import {
@@ -27,6 +28,7 @@ type EnrichedUser = UserEntity & {
 type UserDetails = EnrichedUser & {
   placement: Placement;
   mapsLeft: number;
+  clan: ClanEntity | null;
 };
 
 @Injectable()
@@ -111,13 +113,19 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<UserDetails | null> {
-    const user = await this.usersRepository.findOneBy({ id });
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: { clan: true },
+    });
 
     return user && this.withDetails(user);
   }
 
   async findOneByUsername(username: string): Promise<UserDetails | null> {
-    const user = await this.usersRepository.findOneBy({ username });
+    const user = await this.usersRepository.findOne({
+      where: { username },
+      relations: { clan: true },
+    });
 
     return user && this.withDetails(user);
   }
@@ -149,6 +157,7 @@ export class UsersService {
       ...this.withPassed(user, totalMaps),
       placement: await this.findPlacement(user),
       mapsLeft: Math.max(totalMaps - (user.uniqueCaps ?? 0), 0),
+      clan: user.clan ?? null,
     };
   }
 
