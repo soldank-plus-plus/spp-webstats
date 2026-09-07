@@ -1,4 +1,4 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigType } from '@api/config/env';
 import { ErrorMessageInterceptor } from '@api/shared/interceptors/interceptors';
 import { SerializeInterceptor } from '@api/shared/serialization/serialize';
+import { QueryFailedFilter } from '@api/shared/filters/filters';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -30,6 +31,9 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
     }),
+  );
+  app.useGlobalFilters(
+    new QueryFailedFilter(app.get(HttpAdapterHost).httpAdapter),
   );
 
   if (isDevelopmentEnvironment) {
