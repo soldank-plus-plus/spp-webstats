@@ -35,7 +35,7 @@ The project uses the following packages:
 ## Setup
 
 ### Building
-Make sure you have Node.js v16 (or higher) and clone this repository:
+Make sure you have [Node.js](https://nodejs.org/en) v20 (or higher) and clone this repository:
 
 ```bash
 git clone https://github.com/soldank-plus-plus/spp-webstats
