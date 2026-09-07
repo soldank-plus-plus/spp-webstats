@@ -12,8 +12,8 @@ import { PositionEntity } from './position.entity';
 import { FindAllPositionsDto } from './dto/response.dto';
 import { POSITIONS_PAGINATION_CONFIG } from './positions.pagination';
 
-@ApiTags('positions')
-@Controller('positions')
+@ApiTags('climb/positions')
+@Controller('climb/positions')
 export class PositionsController {
   constructor(private readonly positionsService: PositionsService) {}
 

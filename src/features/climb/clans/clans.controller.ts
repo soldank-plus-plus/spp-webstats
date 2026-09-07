@@ -30,8 +30,8 @@ import { ClanMemberDto } from './dto/clan-member.dto';
 import { ClanRecordsHistoryDto } from './dto/records-history.dto';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
 
-@ApiTags('clans')
-@Controller('clans')
+@ApiTags('climb/clans')
+@Controller('climb/clans')
 export class ClansController {
   constructor(
     private readonly clansService: ClansService,

@@ -32,8 +32,8 @@ import { MapEntity } from './map.entity';
 import { FindAllMapsDto } from './dto/response.dto';
 import { MAPS_PAGINATION_CONFIG } from './maps.pagination';
 
-@ApiTags('maps')
-@Controller('maps')
+@ApiTags('climb/maps')
+@Controller('climb/maps')
 export class MapsController {
   constructor(
     private readonly mapsService: MapsService,

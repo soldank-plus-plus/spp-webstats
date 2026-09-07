@@ -24,8 +24,8 @@ import { CountryEntity } from './country.entity';
 import { FindAllCountriesDto } from './dto/response.dto';
 import { COUNTRIES_PAGINATION_CONFIG } from './countries.pagination';
 
-@ApiTags('countries')
-@Controller('countries')
+@ApiTags('climb/countries')
+@Controller('climb/countries')
 export class CountriesController {
   constructor(
     private readonly countriesService: CountriesService,

@@ -38,8 +38,8 @@ import { UserEntity } from './user.entity';
 import { FindAllUsersDto, FindOneUserDto } from './dto/response.dto';
 import { USERS_PAGINATION_CONFIG } from './users.pagination';
 
-@ApiTags('users')
-@Controller('users')
+@ApiTags('climb/users')
+@Controller('climb/users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,

@@ -12,8 +12,8 @@ import { StatEntity } from './stat.entity';
 import { FindAllStatsDto } from './dto/response.dto';
 import { STATS_PAGINATION_CONFIG } from './stats.pagination';
 
-@ApiTags('stats')
-@Controller('stats')
+@ApiTags('climb/stats')
+@Controller('climb/stats')
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
