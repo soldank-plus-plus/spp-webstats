@@ -52,14 +52,29 @@ export class UsersService {
     clanId: number,
     query: PaginateQuery,
   ): Promise<Paginated<UserEntity>> {
+    const usernameSort = query.sortBy?.find(
+      ([column]) => column === 'username',
+    );
+
     const queryBuilder = this.usersRepository
       .createQueryBuilder('user')
-      .where('user.clanId = :clanId', { clanId })
+      .where('user.clanId = :clanId', { clanId });
+
+    if (usernameSort) {
+      // Postgres compares text by byte value, which sorts every lowercase nick
+      // after the uppercase ones, so alphabetical order is folded here. An
+      // explicit sort also drops the founder grouping below, otherwise the
+      // roster would never be purely alphabetical
+      queryBuilder.orderBy(
+        'LOWER("user".username)',
+        usernameSort[1] === 'DESC' ? 'DESC' : 'ASC',
+      );
+    } else {
       // Founders lead the roster. nestjs-paginate appends its own sorting with
       // addOrderBy, so this stays the primary key and the requested sort
       // decides the order within each group. The alias has to be quoted here
       // because `user` is a reserved word in Postgres
-      .orderBy(
+      queryBuilder.orderBy(
         `CASE
           WHEN EXISTS (
             SELECT 1
@@ -70,10 +85,11 @@ export class UsersService {
         END`,
         'ASC',
       );
+    }
 
     const result = await this.paginateWithPassed(
       queryBuilder,
-      query,
+      usernameSort ? { ...query, sortBy: [] } : query,
       RANKED_USERS_PAGINATION_CONFIG,
     );
     const founderIds = await this.findClanFounderIds(clanId);
