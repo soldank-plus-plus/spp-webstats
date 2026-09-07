@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Get,
   HttpCode,
@@ -9,7 +8,7 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
@@ -24,15 +23,12 @@ import { PositionsService } from '@api/features/climb/positions/positions.servic
 import { PositionEntity } from '@api/features/climb/positions/position.entity';
 import { FindAllPositionsDto } from '@api/features/climb/positions/dto/response.dto';
 import { POSITIONS_PAGINATION_CONFIG } from '@api/features/climb/positions/positions.pagination';
-import {
-  ACTIVITY_TYPES,
-  ActivityType,
-  StatsService,
-} from '@api/features/climb/stats/stats.service';
+import { StatsService } from '@api/features/climb/stats/stats.service';
 import { StatEntity } from '@api/features/climb/stats/stat.entity';
 import { FindAllStatsDto } from '@api/features/climb/stats/dto/response.dto';
 import { STATS_PAGINATION_CONFIG } from '@api/features/climb/stats/stats.pagination';
 import { ActivityDto } from '@api/features/climb/stats/dto/activity.dto';
+import { FindActivityQueryDto } from '@api/features/climb/stats/dto/activity-query.dto';
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
 import { FindAllUsersDto, FindOneUserDto } from './dto/response.dto';
@@ -113,36 +109,15 @@ export class UsersController {
   @Get(':id/activity')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user activity by day' })
-  @ApiQuery({
-    name: 'type',
-    enum: ACTIVITY_TYPES,
-  })
-  @ApiQuery({
-    name: 'year',
-    type: Number,
-    required: false,
-    description: 'Defaults to the most recent year the user was active',
-  })
   @Serialize(ActivityDto)
   findActivity(
     @Param('id', ParseIntPipe) id: number,
-    @Query('type') type: string,
-    @Query('year', new ParseIntPipe({ optional: true })) year?: number,
+    @Query() query: FindActivityQueryDto,
   ): Promise<{
     year: number;
     years: number[];
     days: { day: string; count: number }[];
   }> {
-    if (!ACTIVITY_TYPES.includes(type as ActivityType)) {
-      throw new BadRequestException(
-        `type must be one of ${ACTIVITY_TYPES.join(', ')}`,
-      );
-    }
-
-    return this.statsService.findActivityForUser(
-      id,
-      type as ActivityType,
-      year,
-    );
+    return this.statsService.findActivityForUser(id, query.type, query.year);
   }
 }
