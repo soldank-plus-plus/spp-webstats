@@ -22,8 +22,12 @@ export class FindAllMapsDto {
   mapname: string | null;
 
   @Expose()
+  @Transform(({ obj }) =>
+    (obj.date as number) ? (obj.date as number) * 1000 : null,
+  )
   @ApiProperty({
-    description: 'Map date as a unix timestamp',
+    description:
+      'Map creation date as a unix timestamp in milliseconds, null when unknown',
     nullable: true,
     type: Number,
   })
@@ -59,7 +63,7 @@ export class FindAllMapsDto {
 
   @Expose()
   @ApiProperty({
-    description: 'Difficulty rank among all maps',
+    description: 'Difficulty rank, 1 being the hardest map and 0 unranked',
     nullable: true,
     type: Number,
   })
