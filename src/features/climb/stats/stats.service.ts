@@ -58,18 +58,66 @@ export class StatsService {
   async findActivityForUser(
     userId: number,
     type: ActivityType,
-  ): Promise<{ day: string; count: number }[]> {
-    const queryBuilder = this.statsRepository
-      .createQueryBuilder('stat')
+    year?: number,
+  ): Promise<{
+    year: number;
+    years: number[];
+    days: { day: string; count: number }[];
+  }> {
+    const years = await this.findActivityYears(userId, type);
+    // An unknown year (a filter without records that year) falls back to the
+    // most recent one the player has
+    const selected =
+      year !== undefined && years.includes(year)
+        ? year
+        : (years[0] ?? new Date().getUTCFullYear());
+
+    const queryBuilder = this.activityQuery(userId, type)
       .select(
         "to_char(to_timestamp(stat.recordDate / 1000), 'YYYY-MM-DD')",
         'day',
       )
       .addSelect('COUNT(*)', 'count')
-      .where('stat.userId = :userId', { userId })
-      .andWhere('stat.recordDate IS NOT NULL')
+      .andWhere(
+        'EXTRACT(YEAR FROM to_timestamp(stat.recordDate / 1000)) = :year',
+        { year: selected },
+      )
       .groupBy('day')
       .orderBy('day', 'ASC');
+
+    const rows = await queryBuilder.getRawMany<{
+      day: string;
+      count: string;
+    }>();
+
+    return {
+      year: selected,
+      years,
+      days: rows.map((row) => ({ day: row.day, count: Number(row.count) })),
+    };
+  }
+
+  private async findActivityYears(
+    userId: number,
+    type: ActivityType,
+  ): Promise<number[]> {
+    const rows = await this.activityQuery(userId, type)
+      .select(
+        'EXTRACT(YEAR FROM to_timestamp(stat.recordDate / 1000))::int',
+        'year',
+      )
+      .distinct(true)
+      .orderBy('year', 'DESC')
+      .getRawMany<{ year: number }>();
+
+    return rows.map((row) => Number(row.year));
+  }
+
+  private activityQuery(userId: number, type: ActivityType) {
+    const queryBuilder = this.statsRepository
+      .createQueryBuilder('stat')
+      .where('stat.userId = :userId', { userId })
+      .andWhere('stat.recordDate IS NOT NULL');
 
     const position = ACTIVITY_POSITION[type];
 
@@ -77,11 +125,6 @@ export class StatsService {
       queryBuilder.andWhere('stat.position = :position', { position });
     }
 
-    const rows = await queryBuilder.getRawMany<{
-      day: string;
-      count: string;
-    }>();
-
-    return rows.map((row) => ({ day: row.day, count: Number(row.count) }));
+    return queryBuilder;
   }
 }

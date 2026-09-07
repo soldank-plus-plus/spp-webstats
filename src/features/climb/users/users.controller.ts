@@ -32,7 +32,7 @@ import {
 import { StatEntity } from '@api/features/climb/stats/stat.entity';
 import { FindAllStatsDto } from '@api/features/climb/stats/dto/response.dto';
 import { STATS_PAGINATION_CONFIG } from '@api/features/climb/stats/stats.pagination';
-import { ActivityDayDto } from '@api/features/climb/stats/dto/activity.dto';
+import { ActivityDto } from '@api/features/climb/stats/dto/activity.dto';
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
 import { FindAllUsersDto, FindOneUserDto } from './dto/response.dto';
@@ -117,17 +117,32 @@ export class UsersController {
     name: 'type',
     enum: ACTIVITY_TYPES,
   })
-  @Serialize(ActivityDayDto, { isArray: true })
+  @ApiQuery({
+    name: 'year',
+    type: Number,
+    required: false,
+    description: 'Defaults to the most recent year the user was active',
+  })
+  @Serialize(ActivityDto)
   findActivity(
     @Param('id', ParseIntPipe) id: number,
     @Query('type') type: string,
-  ): Promise<{ day: string; count: number }[]> {
+    @Query('year', new ParseIntPipe({ optional: true })) year?: number,
+  ): Promise<{
+    year: number;
+    years: number[];
+    days: { day: string; count: number }[];
+  }> {
     if (!ACTIVITY_TYPES.includes(type as ActivityType)) {
       throw new BadRequestException(
         `type must be one of ${ACTIVITY_TYPES.join(', ')}`,
       );
     }
 
-    return this.statsService.findActivityForUser(id, type as ActivityType);
+    return this.statsService.findActivityForUser(
+      id,
+      type as ActivityType,
+      year,
+    );
   }
 }
