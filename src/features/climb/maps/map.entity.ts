@@ -8,9 +8,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { PositionEntity } from '@api/features/positions/position.entity';
-import { StatEntity } from '@api/features/stats/stat.entity';
-import { UserEntity } from '@api/features/users/user.entity';
+import { PositionEntity } from '@api/features/climb/positions/position.entity';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
+import { UserEntity } from '@api/features/climb/users/user.entity';
 
 @Entity('maps')
 @Index('idx_maps_name', ['mapname'])

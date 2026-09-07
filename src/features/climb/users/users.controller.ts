@@ -20,19 +20,19 @@ import {
   Serialize,
   SerializePaginate,
 } from '@api/shared/serialization/serialize';
-import { PositionsService } from '@api/features/positions/positions.service';
-import { PositionEntity } from '@api/features/positions/position.entity';
-import { FindAllPositionsDto } from '@api/features/positions/dto/response.dto';
-import { POSITIONS_PAGINATION_CONFIG } from '@api/features/positions/positions.pagination';
+import { PositionsService } from '@api/features/climb/positions/positions.service';
+import { PositionEntity } from '@api/features/climb/positions/position.entity';
+import { FindAllPositionsDto } from '@api/features/climb/positions/dto/response.dto';
+import { POSITIONS_PAGINATION_CONFIG } from '@api/features/climb/positions/positions.pagination';
 import {
   ACTIVITY_TYPES,
   ActivityType,
   StatsService,
-} from '@api/features/stats/stats.service';
-import { StatEntity } from '@api/features/stats/stat.entity';
-import { FindAllStatsDto } from '@api/features/stats/dto/response.dto';
-import { STATS_PAGINATION_CONFIG } from '@api/features/stats/stats.pagination';
-import { ActivityDayDto } from '@api/features/stats/dto/activity.dto';
+} from '@api/features/climb/stats/stats.service';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
+import { FindAllStatsDto } from '@api/features/climb/stats/dto/response.dto';
+import { STATS_PAGINATION_CONFIG } from '@api/features/climb/stats/stats.pagination';
+import { ActivityDayDto } from '@api/features/climb/stats/dto/activity.dto';
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
 import { FindAllUsersDto, FindOneUserDto } from './dto/response.dto';

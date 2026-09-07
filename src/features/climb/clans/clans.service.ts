@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
-import { UserEntity } from '@api/features/users/user.entity';
-import { StatEntity } from '@api/features/stats/stat.entity';
+import { UserEntity } from '@api/features/climb/users/user.entity';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
 import { ClanEntity } from './clan.entity';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
 

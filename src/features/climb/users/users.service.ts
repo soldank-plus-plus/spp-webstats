@@ -7,7 +7,7 @@ import {
   PaginateQuery,
   Paginated,
 } from 'nestjs-paginate';
-import { MapEntity } from '@api/features/maps/map.entity';
+import { MapEntity } from '@api/features/climb/maps/map.entity';
 import { UserEntity } from './user.entity';
 import {
   RANKED_USERS_PAGINATION_CONFIG,

@@ -20,9 +20,9 @@ import {
   Serialize,
   SerializePaginate,
 } from '@api/shared/serialization/serialize';
-import { UsersService } from '@api/features/users/users.service';
-import { UserEntity } from '@api/features/users/user.entity';
-import { RANKED_USERS_PAGINATION_CONFIG } from '@api/features/users/users.pagination';
+import { UsersService } from '@api/features/climb/users/users.service';
+import { UserEntity } from '@api/features/climb/users/user.entity';
+import { RANKED_USERS_PAGINATION_CONFIG } from '@api/features/climb/users/users.pagination';
 import { ClansService } from './clans.service';
 import { ClanEntity } from './clan.entity';
 import { FindAllClansDto } from './dto/response.dto';

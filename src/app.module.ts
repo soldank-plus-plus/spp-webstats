@@ -4,18 +4,18 @@ import { ConfigType, configValidationSchema } from '@api/config/env';
 import { Environment } from '@api/config/types';
 import { LoggerMiddleware } from '@api/logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '@api/features/users/user.entity';
-import { ClanEntity } from '@api/features/clans/clan.entity';
-import { CountryEntity } from '@api/features/countries/country.entity';
-import { MapEntity } from '@api/features/maps/map.entity';
-import { PositionEntity } from '@api/features/positions/position.entity';
-import { StatEntity } from '@api/features/stats/stat.entity';
-import { PositionsModule } from '@api/features/positions/positions.module';
-import { MapsModule } from '@api/features/maps/maps.module';
-import { UsersModule } from '@api/features/users/users.module';
-import { StatsModule } from '@api/features/stats/stats.module';
-import { ClansModule } from '@api/features/clans/clans.module';
-import { CountriesModule } from '@api/features/countries/countries.module';
+import { UserEntity } from '@api/features/climb/users/user.entity';
+import { ClanEntity } from '@api/features/climb/clans/clan.entity';
+import { CountryEntity } from '@api/features/climb/countries/country.entity';
+import { MapEntity } from '@api/features/climb/maps/map.entity';
+import { PositionEntity } from '@api/features/climb/positions/position.entity';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
+import { PositionsModule } from '@api/features/climb/positions/positions.module';
+import { MapsModule } from '@api/features/climb/maps/maps.module';
+import { UsersModule } from '@api/features/climb/users/users.module';
+import { StatsModule } from '@api/features/climb/stats/stats.module';
+import { ClansModule } from '@api/features/climb/clans/clans.module';
+import { CountriesModule } from '@api/features/climb/countries/countries.module';
 
 @Module({
   imports: [

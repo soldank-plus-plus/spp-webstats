@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import AppDataSource from '../data-source';
-import { UserEntity } from '@api/features/users/user.entity';
-import { MapEntity } from '@api/features/maps/map.entity';
-import { PositionEntity } from '@api/features/positions/position.entity';
-import { StatEntity } from '@api/features/stats/stat.entity';
-import { ClanEntity } from '@api/features/clans/clan.entity';
-import { CountryEntity } from '@api/features/countries/country.entity';
+import { UserEntity } from '@api/features/climb/users/user.entity';
+import { MapEntity } from '@api/features/climb/maps/map.entity';
+import { PositionEntity } from '@api/features/climb/positions/position.entity';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
+import { ClanEntity } from '@api/features/climb/clans/clan.entity';
+import { CountryEntity } from '@api/features/climb/countries/country.entity';
 
 // refId is the original id from climb.sql (the real legacy dataset) this
 // sample data is copied from. It's only used to wire up relations below

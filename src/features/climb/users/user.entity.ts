@@ -9,11 +9,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { ClanEntity } from '@api/features/clans/clan.entity';
-import { CountryEntity } from '@api/features/countries/country.entity';
-import { PositionEntity } from '@api/features/positions/position.entity';
-import { MapEntity } from '@api/features/maps/map.entity';
-import { StatEntity } from '@api/features/stats/stat.entity';
+import { ClanEntity } from '@api/features/climb/clans/clan.entity';
+import { CountryEntity } from '@api/features/climb/countries/country.entity';
+import { PositionEntity } from '@api/features/climb/positions/position.entity';
+import { MapEntity } from '@api/features/climb/maps/map.entity';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
 import { bigintTransformer } from '@api/database/transformers/bigint.transformer';
 
 @Entity('users')

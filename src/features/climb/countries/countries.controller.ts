@@ -15,10 +15,10 @@ import {
   Paginated,
 } from 'nestjs-paginate';
 import { SerializePaginate } from '@api/shared/serialization/serialize';
-import { UsersService } from '@api/features/users/users.service';
-import { UserEntity } from '@api/features/users/user.entity';
-import { FindAllUsersDto } from '@api/features/users/dto/response.dto';
-import { RANKED_USERS_PAGINATION_CONFIG } from '@api/features/users/users.pagination';
+import { UsersService } from '@api/features/climb/users/users.service';
+import { UserEntity } from '@api/features/climb/users/user.entity';
+import { FindAllUsersDto } from '@api/features/climb/users/dto/response.dto';
+import { RANKED_USERS_PAGINATION_CONFIG } from '@api/features/climb/users/users.pagination';
 import { CountriesService } from './countries.service';
 import { CountryEntity } from './country.entity';
 import { FindAllCountriesDto } from './dto/response.dto';

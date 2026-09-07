@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
-import { UserEntity } from '@api/features/users/user.entity';
-import { ClanEntity } from '@api/features/clans/clan.entity';
-import { CountryEntity } from '@api/features/countries/country.entity';
-import { MapEntity } from '@api/features/maps/map.entity';
-import { PositionEntity } from '@api/features/positions/position.entity';
-import { StatEntity } from '@api/features/stats/stat.entity';
+import { UserEntity } from '@api/features/climb/users/user.entity';
+import { ClanEntity } from '@api/features/climb/clans/clan.entity';
+import { CountryEntity } from '@api/features/climb/countries/country.entity';
+import { MapEntity } from '@api/features/climb/maps/map.entity';
+import { PositionEntity } from '@api/features/climb/positions/position.entity';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
 
 dotenv.config();
 

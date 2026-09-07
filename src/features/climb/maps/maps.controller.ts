@@ -19,14 +19,14 @@ import {
   Serialize,
   SerializePaginate,
 } from '@api/shared/serialization/serialize';
-import { PositionsService } from '@api/features/positions/positions.service';
-import { PositionEntity } from '@api/features/positions/position.entity';
-import { FindAllPositionsDto } from '@api/features/positions/dto/response.dto';
-import { POSITIONS_PAGINATION_CONFIG } from '@api/features/positions/positions.pagination';
-import { StatsService } from '@api/features/stats/stats.service';
-import { StatEntity } from '@api/features/stats/stat.entity';
-import { FindAllStatsDto } from '@api/features/stats/dto/response.dto';
-import { STATS_PAGINATION_CONFIG } from '@api/features/stats/stats.pagination';
+import { PositionsService } from '@api/features/climb/positions/positions.service';
+import { PositionEntity } from '@api/features/climb/positions/position.entity';
+import { FindAllPositionsDto } from '@api/features/climb/positions/dto/response.dto';
+import { POSITIONS_PAGINATION_CONFIG } from '@api/features/climb/positions/positions.pagination';
+import { StatsService } from '@api/features/climb/stats/stats.service';
+import { StatEntity } from '@api/features/climb/stats/stat.entity';
+import { FindAllStatsDto } from '@api/features/climb/stats/dto/response.dto';
+import { STATS_PAGINATION_CONFIG } from '@api/features/climb/stats/stats.pagination';
 import { MapsService } from './maps.service';
 import { MapEntity } from './map.entity';
 import { FindAllMapsDto } from './dto/response.dto';
