@@ -23,9 +23,19 @@ type RecordsHistoryRow = {
   bronze: string;
 };
 
+type ClanPlacement = {
+  records: number;
+  hardest: number;
+  golds: number;
+};
+
 type EnrichedClan = ClanEntity & {
   creators: UserEntity[];
   usersCount: number;
+};
+
+type ClanDetails = EnrichedClan & {
+  placement: ClanPlacement;
 };
 
 @Injectable()
@@ -41,6 +51,53 @@ export class ClansService {
 
   exists(id: number): Promise<boolean> {
     return this.clansRepository.existsBy({ id });
+  }
+
+  async findOne(id: number): Promise<ClanDetails | null> {
+    const clan = await this.clansRepository.findOneBy({ id });
+
+    if (!clan) {
+      return null;
+    }
+
+    const [enriched] = await this.enrich([clan]);
+
+    if (!enriched) {
+      return null;
+    }
+
+    return { ...enriched, placement: await this.findPlacement(clan) };
+  }
+
+  // Mirrors the user placement: a clan's place is how many clans beat it on
+  // that metric, so ties share a place
+  private async findPlacement(clan: ClanEntity): Promise<ClanPlacement> {
+    const row = await this.clansRepository
+      .createQueryBuilder('clan')
+      .select(
+        'COUNT(*) FILTER (WHERE COALESCE(clan.uniqueCaps, 0) > :uniqueCaps)',
+        'records',
+      )
+      .addSelect(
+        'COUNT(*) FILTER (WHERE COALESCE(clan.hardest, 0) > :hardest)',
+        'hardest',
+      )
+      .addSelect(
+        'COUNT(*) FILTER (WHERE COALESCE(clan.gold, 0) > :gold)',
+        'golds',
+      )
+      .setParameters({
+        uniqueCaps: clan.uniqueCaps ?? 0,
+        hardest: clan.hardest ?? 0,
+        gold: clan.gold ?? 0,
+      })
+      .getRawOne<{ records: string; hardest: string; golds: string }>();
+
+    return {
+      records: Number(row?.records ?? 0) + 1,
+      hardest: Number(row?.hardest ?? 0) + 1,
+      golds: Number(row?.golds ?? 0) + 1,
+    };
   }
 
   async findAll(query: PaginateQuery): Promise<Paginated<ClanEntity>> {

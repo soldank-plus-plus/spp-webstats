@@ -25,7 +25,7 @@ import { UserEntity } from '@api/features/climb/users/user.entity';
 import { RANKED_USERS_PAGINATION_CONFIG } from '@api/features/climb/users/users.pagination';
 import { ClansService } from './clans.service';
 import { ClanEntity } from './clan.entity';
-import { FindAllClansDto } from './dto/response.dto';
+import { FindAllClansDto, FindOneClanDto } from './dto/response.dto';
 import { ClanMemberDto } from './dto/clan-member.dto';
 import { ClanRecordsHistoryDto } from './dto/records-history.dto';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
@@ -45,6 +45,22 @@ export class ClansController {
   @SerializePaginate(FindAllClansDto)
   findAll(@Paginate() query: PaginateQuery): Promise<Paginated<ClanEntity>> {
     return this.clansService.findAll(query);
+  }
+
+  @Get(':clanId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get a clan' })
+  @Serialize(FindOneClanDto)
+  async findOne(
+    @Param('clanId', ParseIntPipe) clanId: number,
+  ): Promise<ClanEntity> {
+    const clan = await this.clansService.findOne(clanId);
+
+    if (!clan) {
+      throw new NotFoundException('Clan not found');
+    }
+
+    return clan;
   }
 
   @Get(':clanId/users')

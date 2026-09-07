@@ -1,4 +1,4 @@
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '@api/features/climb/users/user.entity';
 
@@ -82,4 +82,28 @@ export class FindAllClansDto {
   @Expose()
   @ApiProperty({ description: 'Number of users in this clan' })
   usersCount: number;
+}
+
+class ClanPlacementDto {
+  @Expose()
+  @ApiProperty({ description: 'Place in the unique captures ranking' })
+  records: number;
+
+  @Expose()
+  @ApiProperty({ description: 'Place in the hardest map ranking' })
+  hardest: number;
+
+  @Expose()
+  @ApiProperty({ description: 'Place in the gold medal ranking' })
+  golds: number;
+}
+
+export class FindOneClanDto extends FindAllClansDto {
+  @Expose()
+  @Type(() => ClanPlacementDto)
+  @ApiProperty({
+    description: 'Places in the rankings this clan appears in',
+    type: ClanPlacementDto,
+  })
+  placement: ClanPlacementDto;
 }
