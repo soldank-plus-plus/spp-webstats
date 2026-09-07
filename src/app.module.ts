@@ -16,6 +16,7 @@ import { UsersModule } from '@api/features/climb/users/users.module';
 import { StatsModule } from '@api/features/climb/stats/stats.module';
 import { ClansModule } from '@api/features/climb/clans/clans.module';
 import { CountriesModule } from '@api/features/climb/countries/countries.module';
+import { GamemodesModule } from '@api/features/gamemodes/gamemodes.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { CountriesModule } from '@api/features/climb/countries/countries.module'
     StatsModule,
     ClansModule,
     CountriesModule,
+    GamemodesModule,
   ],
 })
 export class AppModule implements NestModule {
