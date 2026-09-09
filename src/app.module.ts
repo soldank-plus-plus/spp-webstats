@@ -46,7 +46,10 @@ import { GamemodesModule } from '@api/features/gamemodes/gamemodes.module';
         ],
         synchronize:
           config.get('NODE_ENV', { infer: true }) === Environment.DEVELOPMENT,
-        logging: true,
+        // statements are logged with their parameter values, which include
+        // searched usernames, so they stay out of production
+        logging:
+          config.get('NODE_ENV', { infer: true }) === Environment.DEVELOPMENT,
       }),
     }),
     PositionsModule,
