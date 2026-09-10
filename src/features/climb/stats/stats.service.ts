@@ -55,6 +55,8 @@ export class StatsService {
     return paginate(query, queryBuilder, STATS_PAGINATION_CONFIG);
   }
 
+  // Days and years are pinned to UTC so the buckets stay the same whatever
+  // time zone the database session runs in
   async findActivityForUser(
     userId: number,
     type: ActivityType,
@@ -74,12 +76,12 @@ export class StatsService {
 
     const queryBuilder = this.activityQuery(userId, type)
       .select(
-        "to_char(to_timestamp(stat.recordDate / 1000), 'YYYY-MM-DD')",
+        "to_char(to_timestamp(stat.recordDate / 1000) AT TIME ZONE 'UTC', 'YYYY-MM-DD')",
         'day',
       )
       .addSelect('COUNT(*)', 'count')
       .andWhere(
-        'EXTRACT(YEAR FROM to_timestamp(stat.recordDate / 1000)) = :year',
+        "EXTRACT(YEAR FROM to_timestamp(stat.recordDate / 1000) AT TIME ZONE 'UTC') = :year",
         { year: selected },
       )
       .groupBy('day')
@@ -103,7 +105,7 @@ export class StatsService {
   ): Promise<number[]> {
     const rows = await this.activityQuery(userId, type)
       .select(
-        'EXTRACT(YEAR FROM to_timestamp(stat.recordDate / 1000))::int',
+        "EXTRACT(YEAR FROM to_timestamp(stat.recordDate / 1000) AT TIME ZONE 'UTC')::int",
         'year',
       )
       .distinct(true)
