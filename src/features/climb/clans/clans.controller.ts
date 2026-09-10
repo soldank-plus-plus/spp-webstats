@@ -9,7 +9,12 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
@@ -30,6 +35,7 @@ import { ClanMemberDto } from './dto/clan-member.dto';
 import { ClanRecordsHistoryDto } from './dto/records-history.dto';
 import { CLANS_PAGINATION_CONFIG } from './clans.pagination';
 
+@ApiTooManyRequestsResponse({ description: 'Rate limit exceeded' })
 @ApiTags('climb/clans')
 @Controller('climb/clans')
 export class ClansController {

@@ -1,5 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
 import { ConfigType, configValidationSchema } from '@api/config/env';
 import { Environment } from '@api/config/types';
 import { LoggerMiddleware } from '@api/logger/logger.middleware';
@@ -26,6 +28,15 @@ import { GamemodesModule } from '@api/features/gamemodes/gamemodes.module';
       validationOptions: {
         abortEarly: true,
       },
+    }),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<ConfigType, true>) => [
+        {
+          ttl: seconds(config.get('THROTTLER_TTL_SECONDS', { infer: true })),
+          limit: config.get('THROTTLER_LIMIT', { infer: true }),
+        },
+      ],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -60,6 +71,7 @@ import { GamemodesModule } from '@api/features/gamemodes/gamemodes.module';
     CountriesModule,
     GamemodesModule,
   ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

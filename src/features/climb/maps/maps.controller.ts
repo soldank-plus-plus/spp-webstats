@@ -8,7 +8,12 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
@@ -32,6 +37,7 @@ import { MapEntity } from './map.entity';
 import { FindAllMapsDto } from './dto/response.dto';
 import { MAPS_PAGINATION_CONFIG } from './maps.pagination';
 
+@ApiTooManyRequestsResponse({ description: 'Rate limit exceeded' })
 @ApiTags('climb/maps')
 @Controller('climb/maps')
 export class MapsController {
