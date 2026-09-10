@@ -56,6 +56,23 @@ describe('QueryFailedFilter', () => {
     expect(JSON.stringify(adapter.reply.mock.calls[0])).not.toContain('maps');
   });
 
+  // driverError is typed loosely and the filter destructures it, so this pins
+  // that a failure arriving without one is answered rather than thrown on
+  it('leaves a failure that carries no driver error a 500', () => {
+    const withoutDriverError = Object.assign(
+      new QueryFailedError('SELECT 1', [], driverError('22P02')),
+      { driverError: undefined },
+    );
+
+    filter.catch(withoutDriverError, host);
+
+    expect(adapter.reply).toHaveBeenCalledWith(
+      response,
+      expect.objectContaining({ statusCode: 500 }),
+      500,
+    );
+  });
+
   it('leaves any other database failure a 500', () => {
     filter.catch(
       new QueryFailedError('SELECT 1', [], driverError('08006')),

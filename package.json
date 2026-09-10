@@ -7,18 +7,22 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "prettier --write \"{src,test}/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs}/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "type-check": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
+    "test": "jest --selectProjects unit",
+    "test:watch": "jest --selectProjects unit --watch",
+    "test:unit": "jest --selectProjects unit",
+    "test:integration": "jest --config ./test/jest-e2e.json --runInBand --testPathPattern \"test/integration\"",
+    "test:cov": "jest --coverage --runInBand",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest-e2e.json --runInBand",
+    "test:db:up": "docker-compose -p spp-webstats-test -f docker-compose.test.yml up -d",
+    "test:db:down": "docker-compose -p spp-webstats-test -f docker-compose.test.yml down",
     "prepare": "husky ./.husky",
     "pre-push": "npm run lint && npm run type-check",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
@@ -75,25 +79,5 @@
   },
   "overrides": {
     "yargs": "17.7.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "moduleNameMapper": {
-      "^@api/(.*)$": "<rootDir>/$1"
-    },
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }
