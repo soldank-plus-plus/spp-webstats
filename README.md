@@ -34,6 +34,7 @@ The project uses the following packages:
 - [Joi](https://joi.dev/): Validates environment variables on startup
 - [@nestjs/swagger](https://docs.nestjs.com/openapi/introduction): Generates the OpenAPI spec and the docs served at `/api` in development
 - [@nestjs/throttler](https://docs.nestjs.com/security/rate-limiting): Rate limits every endpoint through a globally registered guard
+- [helmet](https://helmetjs.github.io/): Sets the security headers every response carries
 
 ## Setup
 
@@ -151,4 +152,4 @@ The schema is rebuilt from the migrations before the suites start and every tabl
 Settings live in `.env.test`, which holds only the throwaway container's credentials and is checked in. `NODE_ENV` is `production` there on purpose: it is what keeps TypeORM's `synchronize` off, so the suites meet a schema built by the migrations.
 
 ### Type checking and linting
-Both run automatically before every `git push` (via husky's `pre-push` hook), so you don't need to run them manually.
+Linting, type checking and the unit tests all run before every `git push` (via husky's `pre-push` hook), so you don't need to run them manually. The suites that need Postgres stay out of the hook.
