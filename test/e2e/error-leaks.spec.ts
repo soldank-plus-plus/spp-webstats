@@ -130,6 +130,21 @@ describe('what an error tells the caller', () => {
     }
   });
 
+  // the only error message that carries anything the caller sent: nest names the
+  // route that did not match. It says nothing about the server, and it comes
+  // back as a json string under a content type no browser will run
+  it('echoes nothing but the route in the message for an unknown path', async () => {
+    const { body, headers } = await get('/nothing/here').expect(404);
+
+    expect(body).toEqual({
+      statusCode: 404,
+      error: 'Not Found',
+      message: 'Cannot GET /nothing/here',
+    });
+    expect(headers['content-type']).toContain('application/json');
+    expect(headers['x-content-type-options']).toBe('nosniff');
+  });
+
   it('does not hand a stack trace to the caller', async () => {
     const { text } = await get('/climb/maps?filter.hardest=99999999999999');
 
