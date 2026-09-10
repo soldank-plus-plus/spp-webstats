@@ -20,6 +20,8 @@ Variables:
 - `DB_PASSWORD` - Postgres password, used by TypeORM and by `docker-compose.yml`
 - `DB_DATABASE` - Postgres database name, used by TypeORM and by `docker-compose.yml`
 - `DB_LOCAL_ROOT_PASSWORD` - root/superuser password for the local dockerized Postgres instance
+- `THROTTLER_TTL_SECONDS` - length of the rate limiting window in seconds, defaults to `60`
+- `THROTTLER_LIMIT` - requests allowed within that window, defaults to `120` in production and `300` in development
 
 ## Dependencies
 
@@ -31,6 +33,21 @@ The project uses the following packages:
 - [class-validator](https://github.com/typestack/class-validator) / [class-transformer](https://github.com/typestack/class-transformer): Request validation and response serialization (only fields marked `@Expose()` are returned)
 - [Joi](https://joi.dev/): Validates environment variables on startup
 - [@nestjs/swagger](https://docs.nestjs.com/openapi/introduction): Generates the OpenAPI spec and the docs served at `/api` in development
+- [@nestjs/throttler](https://docs.nestjs.com/security/rate-limiting): Rate limits every endpoint through a globally registered guard
+
+## Rate limiting
+
+Every endpoint is rate limited by a global `ThrottlerGuard`, registered as an `APP_GUARD` in `app.module.ts` and configured from `THROTTLER_TTL_SECONDS` and `THROTTLER_LIMIT`. No endpoint is exempt.
+
+Counting is per client and per endpoint: each IP gets its own budget on each route, so a page that loads several different endpoints at once never spends one shared allowance. The two cross-entity listings, `GET /climb/positions` and `GET /climb/stats`, join both `map` and `user` and expose the whole dataset a page at a time, so they run on the stricter limit in `src/shared/throttling/throttling.constants.ts`.
+
+Once a client is over its limit the API answers `429 Too Many Requests` and sets `Retry-After` to the seconds left in the window. Every other response carries `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset`, so a client can back off before being blocked.
+
+Things to keep in mind when deploying:
+
+- Clients are told apart by `req.ip`, which express derives from `X-Forwarded-For` according to the `trust proxy` hop count set in `main.ts`. It is `1`, matching a single reverse proxy in front of the app. Set it to the real number of proxies: too high a value lets a client forge the header, hand itself a fresh address and walk past the limiter, while too low a value collapses every visitor onto the proxy address and throttles the whole site as one client.
+- The counters live in memory, so each instance limits on its own. Running several instances behind a load balancer multiplies the effective limit by the instance count. A shared store (`ThrottlerModule`'s `storage` option, for example the Redis one) is the next step there, and swapping it in touches only the module configuration.
+- A client on IPv6 can rotate through the addresses of its prefix, and visitors behind one NAT share a single address. The limiter is a layer of protection, not a replacement for the rate limiting, CDN or WAF in front of the app.
 
 ## Setup
 

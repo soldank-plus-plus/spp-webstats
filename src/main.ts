@@ -17,6 +17,13 @@ async function bootstrap() {
     cors: true,
   });
 
+  // The rate limiter buckets requests by req.ip, which express resolves from
+  // X-Forwarded-For only as far as this hop count allows. One hop matches a
+  // single reverse proxy terminating TLS in front of the app: raise it to the
+  // real number of proxies, and never to true, because every hop beyond the
+  // ones actually there is a header a client can forge to get a fresh bucket
+  app.set('trust proxy', 1);
+
   const configService = app.get(ConfigService<ConfigType>);
 
   const isDevelopmentEnvironment =

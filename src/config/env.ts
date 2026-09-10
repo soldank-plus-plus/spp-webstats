@@ -11,11 +11,21 @@ export type ConfigType = {
   DB_PASSWORD: string;
   DB_DATABASE: string;
   DB_LOCAL_ROOT_PASSWORD?: string;
+
+  THROTTLER_TTL_SECONDS: number;
+  THROTTLER_LIMIT: number;
 };
 
 const DEFAULTS: Partial<ConfigType> = {
   NODE_ENV: Environment.DEVELOPMENT,
+  THROTTLER_TTL_SECONDS: 60,
+  THROTTLER_LIMIT: 120,
 };
+
+// a development run reloads the same routes far more often than a visitor
+// browsing the site does, and being throttled locally only ever reads as a
+// broken frontend
+const DEVELOPMENT_THROTTLER_LIMIT = 300;
 
 export const configValidationSchema: ObjectSchema<ConfigType> = Joi.object({
   NODE_ENV: Joi.string()
@@ -32,4 +42,17 @@ export const configValidationSchema: ObjectSchema<ConfigType> = Joi.object({
     then: Joi.string().required(),
     otherwise: Joi.string().optional().empty(''),
   }),
+
+  THROTTLER_TTL_SECONDS: Joi.number()
+    .integer()
+    .positive()
+    .default(DEFAULTS.THROTTLER_TTL_SECONDS),
+  THROTTLER_LIMIT: Joi.number()
+    .integer()
+    .positive()
+    .when('NODE_ENV', {
+      is: Environment.DEVELOPMENT,
+      then: Joi.number().default(DEVELOPMENT_THROTTLER_LIMIT),
+      otherwise: Joi.number().default(DEFAULTS.THROTTLER_LIMIT),
+    }),
 });

@@ -24,7 +24,7 @@ Migrations live in `src/database/migrations/`, driven by `src/database/data-sour
 
 ## Tests
 
-Jest is configured (`npm run test`, `npm run test:e2e`, `npm run test:cov`), but no test files exist yet.
+Jest is configured (`npm run test`, `npm run test:e2e`, `npm run test:cov`). Unit specs live next to the code they cover (`*.spec.ts` under `src/`); there is no e2e suite and none of them touch Postgres.
 
 ## Architecture
 
@@ -35,6 +35,8 @@ Feature-module pattern, one folder per resource under `src/features/` (e.g. `src
 - `<name>.pagination.ts`: `nestjs-paginate` `PaginateConfig` (sortable/filterable columns, relations, limits).
 
 Global wiring lives in `main.ts`: `ValidationPipe` (whitelist, forbid unknown/non-whitelisted fields), `ErrorMessageInterceptor` (flattens class-validator's array of messages into one string), `SerializeInterceptor` (strips any field not marked `@Expose()` on the handler's DTO, driven by the `@Serialize`/`@SerializePaginate` decorators in `src/shared/serialization/serialize.ts`).
+
+Rate limiting is global: `app.module.ts` registers `@nestjs/throttler`'s `ThrottlerGuard` as an `APP_GUARD` and configures it from `THROTTLER_TTL_SECONDS` / `THROTTLER_LIMIT`, so every route is limited per client IP without a decorator. Heavier routes tighten that with `@Throttle()` and the limit in `src/shared/throttling/throttling.constants.ts`. Client addresses come from `req.ip`, which depends on the `trust proxy` hop count set in `main.ts`.
 
 Config is loaded and validated via `@nestjs/config` + Joi in `src/config/env.ts`. DB connection is `TypeOrmModule.forRootAsync`; `synchronize` is only true when `NODE_ENV=development`, so real schema changes go through migrations.
 

@@ -8,7 +8,11 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
@@ -34,6 +38,7 @@ import { UserEntity } from './user.entity';
 import { FindAllUsersDto, FindOneUserDto } from './dto/response.dto';
 import { USERS_PAGINATION_CONFIG } from './users.pagination';
 
+@ApiTooManyRequestsResponse({ description: 'Rate limit exceeded' })
 @ApiTags('climb/users')
 @Controller('climb/users')
 export class UsersController {

@@ -7,7 +7,11 @@ import {
   Param,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
 import {
   PaginatedSwaggerDocs,
   Paginate,
@@ -24,6 +28,7 @@ import { CountryEntity } from './country.entity';
 import { FindAllCountriesDto } from './dto/response.dto';
 import { COUNTRIES_PAGINATION_CONFIG } from './countries.pagination';
 
+@ApiTooManyRequestsResponse({ description: 'Rate limit exceeded' })
 @ApiTags('climb/countries')
 @Controller('climb/countries')
 export class CountriesController {
