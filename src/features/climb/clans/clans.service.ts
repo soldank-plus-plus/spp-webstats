@@ -199,8 +199,10 @@ export class ClansService {
       .getRawMany<{ clanId: number; userId: number; username: string }>();
 
     const creatorsByClanId = new Map<number, UserEntity[]>();
+
     for (const row of creatorRows) {
       const creators = creatorsByClanId.get(row.clanId) ?? [];
+
       creators.push({ id: row.userId, username: row.username } as UserEntity);
       creatorsByClanId.set(row.clanId, creators);
     }

@@ -103,8 +103,10 @@ export class MapsService {
       .getRawMany<{ mapId: number; userId: number; username: string }>();
 
     const creatorsByMapId = new Map<number, UserEntity[]>();
+
     for (const row of creatorRows) {
       const creators = creatorsByMapId.get(row.mapId) ?? [];
+
       creators.push({ id: row.userId, username: row.username } as UserEntity);
       creatorsByMapId.set(row.mapId, creators);
     }
