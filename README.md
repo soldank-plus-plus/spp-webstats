@@ -22,6 +22,7 @@ Variables:
 - `DB_LOCAL_ROOT_PASSWORD` - root/superuser password for the local dockerized Postgres instance
 - `THROTTLER_TTL_SECONDS` - length of the rate limiting window in seconds, defaults to `60`
 - `THROTTLER_LIMIT` - requests allowed within that window, defaults to `120` in production and `300` in development
+- `CORS_ORIGINS` - comma separated sites the browser may read responses from, defaults to `https://soldankpp.app` in production and `http://localhost:5173` in development
 
 ## Dependencies
 
@@ -34,6 +35,12 @@ The project uses the following packages:
 - [Joi](https://joi.dev/): Validates environment variables on startup
 - [@nestjs/swagger](https://docs.nestjs.com/openapi/introduction): Generates the OpenAPI spec and the docs served at `/api` in development
 - [@nestjs/throttler](https://docs.nestjs.com/security/rate-limiting): Rate limits every endpoint through a globally registered guard
+
+## CORS
+
+The API answers everyone, but only the sites in `CORS_ORIGINS` get the header a browser needs to read the response, and only for `GET`, `HEAD` and `OPTIONS`. Nothing invites credentials, because the API reads neither cookies nor an `Authorization` header.
+
+An origin is a scheme, a host and optionally a port, so `https://soldankpp.app/` or `soldankpp.app` are rejected when the app starts rather than silently blocking the frontend. A new deployment domain, a preview URL or a second dev port goes on the list rather than into the code.
 
 ## Setup
 

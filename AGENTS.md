@@ -40,6 +40,8 @@ Feature-module pattern, one folder per resource under `src/features/` (e.g. `src
 
 Global wiring lives in `src/app.setup.ts` (`configureApp`, called from `main.ts` and by the e2e suites): `ValidationPipe` (whitelist, forbid unknown/non-whitelisted fields), `ErrorMessageInterceptor` (flattens class-validator's array of messages into one string), `SerializeInterceptor` (strips any field not marked `@Expose()` on the handler's DTO, driven by the `@Serialize`/`@SerializePaginate` decorators in `src/shared/serialization/serialize.ts`).
 
+CORS is configured in `configureApp` from `CORS_ORIGINS`: only the listed origins get an allow header, and only for GET, HEAD and OPTIONS. `main.ts` no longer switches cors on at `NestFactory.create`.
+
 Rate limiting is global: `app.module.ts` registers `@nestjs/throttler`'s `ThrottlerGuard` as an `APP_GUARD` and configures it from `THROTTLER_TTL_SECONDS` / `THROTTLER_LIMIT`, so every route is limited per client IP without a decorator. Heavier routes tighten that with `@Throttle()` and the limit in `src/shared/throttling/throttling.constants.ts`. Client addresses come from `req.ip`, which depends on the `trust proxy` hop count set in `main.ts`.
 
 Config is loaded and validated via `@nestjs/config` + Joi in `src/config/env.ts`. DB connection is `TypeOrmModule.forRootAsync`; `synchronize` is only true when `NODE_ENV=development`, so real schema changes go through migrations.
