@@ -21,6 +21,10 @@ export class MapsService {
     private readonly statsRepository: Repository<StatEntity>,
   ) {}
 
+  exists(id: number): Promise<boolean> {
+    return this.mapsRepository.existsBy({ id });
+  }
+
   async findAll(
     query: PaginateQuery,
     creator?: string,

@@ -32,6 +32,7 @@ import { StatsService } from '@api/features/climb/stats/stats.service';
 import { StatEntity } from '@api/features/climb/stats/stat.entity';
 import { FindAllStatsDto } from '@api/features/climb/stats/dto/response.dto';
 import { STATS_PAGINATION_CONFIG } from '@api/features/climb/stats/stats.pagination';
+import { UsersService } from '@api/features/climb/users/users.service';
 import { MapsService } from './maps.service';
 import { MapEntity } from './map.entity';
 import { FindAllMapsDto } from './dto/response.dto';
@@ -45,6 +46,7 @@ export class MapsController {
     private readonly mapsService: MapsService,
     private readonly positionsService: PositionsService,
     private readonly statsService: StatsService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Get()
@@ -84,10 +86,14 @@ export class MapsController {
   @ApiOperation({ summary: 'Get maps created by a user' })
   @PaginatedSwaggerDocs(FindAllMapsDto, MAPS_PAGINATION_CONFIG)
   @SerializePaginate(FindAllMapsDto)
-  findByUser(
+  async findByUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<MapEntity>> {
+    if (!(await this.usersService.exists(userId))) {
+      throw new NotFoundException('User not found');
+    }
+
     return this.mapsService.findAllByUser(userId, query);
   }
 
@@ -96,10 +102,14 @@ export class MapsController {
   @ApiOperation({ summary: 'Get positions for a map' })
   @PaginatedSwaggerDocs(FindAllPositionsDto, POSITIONS_PAGINATION_CONFIG)
   @SerializePaginate(FindAllPositionsDto)
-  findPositions(
+  async findPositions(
     @Param('mapId', ParseIntPipe) mapId: number,
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<PositionEntity>> {
+    if (!(await this.mapsService.exists(mapId))) {
+      throw new NotFoundException('Map not found');
+    }
+
     return this.positionsService.findAllForMap(mapId, query);
   }
 
@@ -108,10 +118,14 @@ export class MapsController {
   @ApiOperation({ summary: 'Get stats for a map' })
   @PaginatedSwaggerDocs(FindAllStatsDto, STATS_PAGINATION_CONFIG)
   @SerializePaginate(FindAllStatsDto)
-  findStats(
+  async findStats(
     @Param('mapId', ParseIntPipe) mapId: number,
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<StatEntity>> {
+    if (!(await this.mapsService.exists(mapId))) {
+      throw new NotFoundException('Map not found');
+    }
+
     return this.statsService.findAllForMap(mapId, query);
   }
 }

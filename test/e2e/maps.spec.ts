@@ -212,12 +212,20 @@ describe('climb/maps', () => {
       ]);
     });
 
-    // the route does not look the user up, an unknown id is simply a user who
-    // has no maps
-    it('answers an empty page for a user that does not exist', async () => {
+    it('answers 404 for a user that does not exist', async () => {
       await createMap(context.dataSource);
 
-      const { body } = await get('/climb/maps/by-user/999').expect(200);
+      const { body } = await get('/climb/maps/by-user/999').expect(404);
+
+      expect(body.message).toBe('User not found');
+    });
+
+    it('answers an empty page for a user who made no maps', async () => {
+      const user = await createUser(context.dataSource);
+
+      await createMap(context.dataSource);
+
+      const { body } = await get(`/climb/maps/by-user/${user.id}`).expect(200);
 
       expect(body.data).toEqual([]);
     });
@@ -252,8 +260,16 @@ describe('climb/maps', () => {
       });
     });
 
-    it('answers an empty page for a map that does not exist', async () => {
-      const { body } = await get('/climb/maps/999/positions').expect(200);
+    it('answers 404 for a map that does not exist', async () => {
+      const { body } = await get('/climb/maps/999/positions').expect(404);
+
+      expect(body.message).toBe('Map not found');
+    });
+
+    it('answers an empty page for a map nobody has a position on', async () => {
+      const map = await createMap(context.dataSource);
+
+      const { body } = await get(`/climb/maps/${map.id}/positions`).expect(200);
 
       expect(body.data).toEqual([]);
     });
@@ -288,8 +304,16 @@ describe('climb/maps', () => {
       });
     });
 
-    it('answers an empty page for a map that does not exist', async () => {
-      const { body } = await get('/climb/maps/999/stats').expect(200);
+    it('answers 404 for a map that does not exist', async () => {
+      const { body } = await get('/climb/maps/999/stats').expect(404);
+
+      expect(body.message).toBe('Map not found');
+    });
+
+    it('answers an empty page for a map nobody has a record on', async () => {
+      const map = await createMap(context.dataSource);
+
+      const { body } = await get(`/climb/maps/${map.id}/stats`).expect(200);
 
       expect(body.data).toEqual([]);
     });

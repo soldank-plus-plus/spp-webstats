@@ -1,6 +1,7 @@
 import {
   ArgumentMetadata,
   BadRequestException,
+  NotFoundException,
   ValidationPipe,
 } from '@nestjs/common';
 import { FindActivityQueryDto } from '@api/features/climb/stats/dto/activity-query.dto';
@@ -67,13 +68,17 @@ describe('UsersController.findActivity', () => {
     years: [2024],
     days: [],
   });
+  const exists = jest.fn().mockResolvedValue(true);
   const controller = new UsersController(
-    {} as UsersService,
+    { exists } as unknown as UsersService,
     {} as PositionsService,
     { findActivityForUser } as unknown as StatsService,
   );
 
-  beforeEach(() => findActivityForUser.mockClear());
+  beforeEach(() => {
+    findActivityForUser.mockClear();
+    exists.mockClear().mockResolvedValue(true);
+  });
 
   it('passes the parsed year to the service', async () => {
     await controller.findActivity(
@@ -88,5 +93,15 @@ describe('UsersController.findActivity', () => {
     await controller.findActivity(123, await transformQuery({ type: 'golds' }));
 
     expect(findActivityForUser).toHaveBeenCalledWith(123, 'golds', undefined);
+  });
+
+  it('answers 404 without asking for the activity of a user that is not there', async () => {
+    exists.mockResolvedValue(false);
+
+    await expect(
+      controller.findActivity(123, await transformQuery({ type: 'records' })),
+    ).rejects.toThrow(NotFoundException);
+
+    expect(findActivityForUser).not.toHaveBeenCalled();
   });
 });

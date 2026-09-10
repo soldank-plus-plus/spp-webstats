@@ -40,6 +40,10 @@ export class UsersService {
     private readonly mapsRepository: Repository<MapEntity>,
   ) {}
 
+  exists(id: number): Promise<boolean> {
+    return this.usersRepository.existsBy({ id });
+  }
+
   findAll(query: PaginateQuery): Promise<Paginated<UserEntity>> {
     return this.paginateWithPassed(
       this.usersRepository,

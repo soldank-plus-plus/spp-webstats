@@ -216,8 +216,19 @@ describe('climb/users', () => {
       expect(body.data[0].userId).toBe(user.id);
     });
 
-    it('answers an empty page for a user that does not exist', async () => {
-      const { body } = await get('/climb/users/999/stats').expect(200);
+    it.each(['positions', 'stats'])(
+      'answers 404 on /%s for a user that does not exist',
+      async (nested) => {
+        const { body } = await get(`/climb/users/999/${nested}`).expect(404);
+
+        expect(body.message).toBe('User not found');
+      },
+    );
+
+    it('answers an empty page for a user with no records', async () => {
+      const user = await createUser(context.dataSource);
+
+      const { body } = await get(`/climb/users/${user.id}/stats`).expect(200);
 
       expect(body.data).toEqual([]);
     });
@@ -283,9 +294,19 @@ describe('climb/users', () => {
       expect(body.data.year).toBe(2021);
     });
 
-    it('answers an empty activity for a user that does not exist', async () => {
+    it('answers 404 for a user that does not exist', async () => {
       const { body } = await get(
         '/climb/users/999/activity?type=records',
+      ).expect(404);
+
+      expect(body.message).toBe('User not found');
+    });
+
+    it('answers an empty activity for a user who set no records', async () => {
+      const user = await createUser(context.dataSource);
+
+      const { body } = await get(
+        `/climb/users/${user.id}/activity?type=records`,
       ).expect(200);
 
       expect(body.data.years).toEqual([]);

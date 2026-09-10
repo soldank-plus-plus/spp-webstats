@@ -92,10 +92,12 @@ export class UsersController {
   @ApiOperation({ summary: 'Get positions for a user' })
   @PaginatedSwaggerDocs(FindAllPositionsDto, POSITIONS_PAGINATION_CONFIG)
   @SerializePaginate(FindAllPositionsDto)
-  findPositions(
+  async findPositions(
     @Param('userId', ParseIntPipe) userId: number,
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<PositionEntity>> {
+    await this.assertExists(userId);
+
     return this.positionsService.findAllForUser(userId, query);
   }
 
@@ -104,10 +106,12 @@ export class UsersController {
   @ApiOperation({ summary: 'Get stats for a user' })
   @PaginatedSwaggerDocs(FindAllStatsDto, STATS_PAGINATION_CONFIG)
   @SerializePaginate(FindAllStatsDto)
-  findStats(
+  async findStats(
     @Param('userId', ParseIntPipe) userId: number,
     @Paginate() query: PaginateQuery,
   ): Promise<Paginated<StatEntity>> {
+    await this.assertExists(userId);
+
     return this.statsService.findAllForUser(userId, query);
   }
 
@@ -115,7 +119,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get user activity by day' })
   @Serialize(ActivityDto)
-  findActivity(
+  async findActivity(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: FindActivityQueryDto,
   ): Promise<{
@@ -123,6 +127,14 @@ export class UsersController {
     years: number[];
     days: { day: string; count: number }[];
   }> {
+    await this.assertExists(id);
+
     return this.statsService.findActivityForUser(id, query.type, query.year);
+  }
+
+  private async assertExists(id: number): Promise<void> {
+    if (!(await this.usersService.exists(id))) {
+      throw new NotFoundException('User not found');
+    }
   }
 }
