@@ -16,6 +16,15 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: ['.eslintrc.js'],
+  overrides: [
+    {
+      // a command line script, printing is how it reports what it did
+      files: ['src/database/fixtures/**/*.ts'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+  ],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
