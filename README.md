@@ -140,6 +140,9 @@ npm run test:e2e
 # with coverage
 npm run test:cov
 
+# just the suites that guard the api surface
+npm run test:security
+
 npm run test:db:down
 ```
 
