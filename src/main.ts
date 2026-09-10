@@ -10,9 +10,7 @@ import helmet from 'helmet';
 const SWAGGER_PATH = 'api';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   configureApp(app);
 
