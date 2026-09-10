@@ -1,0 +1,16 @@
+# Postgres for the integration and e2e suites. It runs on its own port with a
+# throwaway in-memory data directory, so the test schema can be dropped and
+# recreated without ever touching the development database from docker-compose.yml
+services:
+  postgres-test:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${TEST_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${TEST_DB_DATABASE:-webstats_test}
+    ports:
+      - '${TEST_DB_PORT:-5433}:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+    command: >
+      postgres -c fsync=off -c full_page_writes=off -c synchronous_commit=off

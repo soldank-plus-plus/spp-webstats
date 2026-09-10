@@ -4,8 +4,9 @@ import { Test } from '@nestjs/testing';
 import { Throttle, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import request from 'supertest';
 
-// small enough to watch a window expire without slowing the suite down
-const TTL = 500;
+// short enough to watch a window expire without slowing the suite down, long
+// enough that a slow machine cannot expire it while a test is still filling it
+const TTL = 1000;
 const LIMIT = 4;
 const STRICTER_LIMIT = 2;
 
@@ -75,7 +76,7 @@ describe('rate limiting', () => {
     }
 
     await get('/records').expect(429);
-    await new Promise((resolve) => setTimeout(resolve, TTL + 100));
+    await new Promise((resolve) => setTimeout(resolve, TTL + 200));
 
     await get('/records').expect(200);
   });

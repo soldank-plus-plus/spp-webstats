@@ -24,7 +24,11 @@ Migrations live in `src/database/migrations/`, driven by `src/database/data-sour
 
 ## Tests
 
-Jest is configured (`npm run test`, `npm run test:e2e`, `npm run test:cov`). Unit specs live next to the code they cover (`*.spec.ts` under `src/`); there is no e2e suite and none of them touch Postgres.
+Two Jest projects, both defined in `jest.config.js`:
+- `unit`: `*.spec.ts` next to the code under `src/`, no database. `npm run test`.
+- `e2e`: everything under `test/`, against the throwaway Postgres from `docker-compose.test.yml` (`npm run test:db:up`, settings in `.env.test`). `test/integration/` drives services and entities, `test/e2e/` drives the HTTP API through `configureApp`. `npm run test:e2e`, or `npm run test:integration` for the integration half.
+
+`npm run test:cov` runs both and enforces the coverage floor. The schema is built from the migrations in `test/global-setup.ts`, every table is truncated before each test by `setupTestContext` in `test/utils/context.ts`, and rows are built with the factories in `test/factories/`. Anything destructive refuses to run unless `DB_DATABASE` ends with `_test`.
 
 ## Architecture
 
@@ -34,7 +38,7 @@ Feature-module pattern, one folder per resource under `src/features/` (e.g. `src
 - `dto/response.dto.ts`: class-transformer DTO; only fields marked `@Expose()` are serialized out.
 - `<name>.pagination.ts`: `nestjs-paginate` `PaginateConfig` (sortable/filterable columns, relations, limits).
 
-Global wiring lives in `main.ts`: `ValidationPipe` (whitelist, forbid unknown/non-whitelisted fields), `ErrorMessageInterceptor` (flattens class-validator's array of messages into one string), `SerializeInterceptor` (strips any field not marked `@Expose()` on the handler's DTO, driven by the `@Serialize`/`@SerializePaginate` decorators in `src/shared/serialization/serialize.ts`).
+Global wiring lives in `src/app.setup.ts` (`configureApp`, called from `main.ts` and by the e2e suites): `ValidationPipe` (whitelist, forbid unknown/non-whitelisted fields), `ErrorMessageInterceptor` (flattens class-validator's array of messages into one string), `SerializeInterceptor` (strips any field not marked `@Expose()` on the handler's DTO, driven by the `@Serialize`/`@SerializePaginate` decorators in `src/shared/serialization/serialize.ts`).
 
 Rate limiting is global: `app.module.ts` registers `@nestjs/throttler`'s `ThrottlerGuard` as an `APP_GUARD` and configures it from `THROTTLER_TTL_SECONDS` / `THROTTLER_LIMIT`, so every route is limited per client IP without a decorator. Heavier routes tighten that with `@Throttle()` and the limit in `src/shared/throttling/throttling.constants.ts`. Client addresses come from `req.ip`, which depends on the `trust proxy` hop count set in `main.ts`.
 

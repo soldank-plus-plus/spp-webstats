@@ -1,0 +1,17 @@
+{
+  "displayName": "e2e",
+  "rootDir": "..",
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleNameMapper": {
+    "^@api/(.*)$": "<rootDir>/src/$1"
+  },
+  "testRegex": "test/(integration|e2e)/.*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "testEnvironment": "node",
+  "setupFiles": ["<rootDir>/test/setup-env.ts"],
+  "globalSetup": "<rootDir>/test/global-setup.ts",
+  "testTimeout": 30000,
+  "maxWorkers": 1
+}

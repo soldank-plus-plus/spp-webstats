@@ -35,20 +35,6 @@ The project uses the following packages:
 - [@nestjs/swagger](https://docs.nestjs.com/openapi/introduction): Generates the OpenAPI spec and the docs served at `/api` in development
 - [@nestjs/throttler](https://docs.nestjs.com/security/rate-limiting): Rate limits every endpoint through a globally registered guard
 
-## Rate limiting
-
-Every endpoint is rate limited by a global `ThrottlerGuard`, registered as an `APP_GUARD` in `app.module.ts` and configured from `THROTTLER_TTL_SECONDS` and `THROTTLER_LIMIT`. No endpoint is exempt.
-
-Counting is per client and per endpoint: each IP gets its own budget on each route, so a page that loads several different endpoints at once never spends one shared allowance. The two cross-entity listings, `GET /climb/positions` and `GET /climb/stats`, join both `map` and `user` and expose the whole dataset a page at a time, so they run on the stricter limit in `src/shared/throttling/throttling.constants.ts`.
-
-Once a client is over its limit the API answers `429 Too Many Requests` and sets `Retry-After` to the seconds left in the window. Every other response carries `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset`, so a client can back off before being blocked.
-
-Things to keep in mind when deploying:
-
-- Clients are told apart by `req.ip`, which express derives from `X-Forwarded-For` according to the `trust proxy` hop count set in `main.ts`. It is `1`, matching a single reverse proxy in front of the app. Set it to the real number of proxies: too high a value lets a client forge the header, hand itself a fresh address and walk past the limiter, while too low a value collapses every visitor onto the proxy address and throttles the whole site as one client.
-- The counters live in memory, so each instance limits on its own. Running several instances behind a load balancer multiplies the effective limit by the instance count. A shared store (`ThrottlerModule`'s `storage` option, for example the Redis one) is the next step there, and swapping it in touches only the module configuration.
-- A client on IPv6 can rotate through the addresses of its prefix, and visitors behind one NAT share a single address. The limiter is a layer of protection, not a replacement for the rate limiting, CDN or WAF in front of the app.
-
 ## Setup
 
 ### Building
@@ -136,16 +122,30 @@ npm run start:prod
 ## Development
 
 ### Testing
+
+Unit specs sit next to the code under `src/` and need nothing but node. Everything under `test/` runs against a real Postgres: `test/integration/` drives the services and entities, `test/e2e/` drives the HTTP API. Those suites use a throwaway container, separate from the development database:
+
 ```bash
-# unit tests
+npm run test:db:up
+
+# unit tests, no database needed
 npm run test
 
-# e2e tests
+# services and entities against Postgres
+npm run test:integration
+
+# the http api, plus the integration suites
 npm run test:e2e
 
-# test coverage
+# with coverage
 npm run test:cov
+
+npm run test:db:down
 ```
+
+The schema is rebuilt from the migrations before the suites start and every table is emptied before each test, so nothing depends on the order they run in. Anything destructive refuses to run unless the database name ends with `_test`.
+
+Settings live in `.env.test`, which holds only the throwaway container's credentials and is checked in. `NODE_ENV` is `production` there on purpose: it is what keeps TypeORM's `synchronize` off, so the suites meet a schema built by the migrations.
 
 ### Type checking and linting
 Both run automatically before every `git push` (via husky's `pre-push` hook), so you don't need to run them manually.
