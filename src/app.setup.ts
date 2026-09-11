@@ -1,7 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
+import { ConfigType } from '@api/config/env';
 import { ErrorMessageInterceptor } from '@api/shared/interceptors/interceptors';
 import { SerializeInterceptor } from '@api/shared/serialization/serialize';
 import { QueryFailedFilter } from '@api/shared/filters/filters';
@@ -15,6 +17,16 @@ export const configureApp = (app: NestExpressApplication): void => {
   // real number of proxies, and never to true, because every hop beyond the
   // ones actually there is a header a client can forge to get a fresh bucket
   app.set('trust proxy', 1);
+
+  // nothing here reads a cookie or an Authorization header, so credentials stay
+  // off and reads are all a browser is offered
+  app.enableCors({
+    origin: app
+      .get(ConfigService<ConfigType, true>)
+      .get('CORS_ORIGINS', { infer: true })
+      .split(','),
+    methods: ['GET', 'HEAD', 'OPTIONS'],
+  });
 
   app.use(
     helmet({
