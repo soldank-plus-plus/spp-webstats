@@ -25,6 +25,9 @@ lerna-debug.log*
 test.sql
 test.db
 
+# Database dumps, the data never goes to the repo
+/*.sql
+
 # IDEs and editors
 /.idea
 .project
